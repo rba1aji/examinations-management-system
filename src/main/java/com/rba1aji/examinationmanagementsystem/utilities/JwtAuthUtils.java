@@ -5,8 +5,11 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import java.nio.file.AccessDeniedException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
@@ -22,6 +25,8 @@ public class JwtAuthUtils {
   private long expirationHours;
 
   private String encodedSecret;
+
+  private final Logger logger = LoggerFactory.getLogger(JwtAuthUtils.class);
 
   @PostConstruct
   protected void init() {
@@ -49,20 +54,24 @@ public class JwtAuthUtils {
         .compact();
   }
 
-  public boolean validateToken(String token) {
+  public boolean isExpired(String token) {
     try {
       Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-      return true;
-    } catch (Exception e) {
       return false;
+    } catch (Exception e) {
+      return true;
     }
   }
 
-  public JwtClaimsDto decodeToken(String token) {
-    Claims claims = Jwts.parser().setSigningKey(encodedSecret).parseClaimsJws(token).getBody();
-    JwtClaimsDto claimsDto = new JwtClaimsDto();
-    claimsDto.setRole(claims.get("role").toString());
-    return claimsDto;
+  public JwtClaimsDto decodeToken(String token) throws AccessDeniedException {
+    try {
+      Claims claims = Jwts.parser().setSigningKey(encodedSecret).parseClaimsJws(token).getBody();
+      JwtClaimsDto claimsDto = new JwtClaimsDto();
+      claimsDto.setRole(claims.get("role").toString());
+      return claimsDto;
+    }catch (Exception e){
+      throw new AccessDeniedException(e.getMessage());
+    }
   }
 
 }
