@@ -1,6 +1,7 @@
 package com.rba1aji.examinationmanagementsystem.config;
 
 import com.rba1aji.examinationmanagementsystem.utilities.AuthFilter;
+import com.rba1aji.examinationmanagementsystem.utilities.CorsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,21 +10,22 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebMvc
 public class SecurityConfig {
 
-  private final AuthFilter authFilter;
+  @Autowired
+  private AuthFilter authFilter;
 
-  public SecurityConfig(AuthFilter authFilter) {
-    this.authFilter = authFilter;
-  }
+  @Autowired
+  private CorsFilter corsFilter;
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
+    http
+        .addFilterBefore(corsFilter, org.springframework.web.filter.CorsFilter.class)
+        .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
         .authorizeHttpRequests((authz) -> authz
             .anyRequest().permitAll()
         )

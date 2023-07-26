@@ -3,6 +3,7 @@ package com.rba1aji.examinationmanagementsystem.model;
 import com.rba1aji.examinationmanagementsystem.dto.ExamBatchStudentsDto;
 import jakarta.persistence.*;
 import lombok.Data;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -10,6 +11,8 @@ import java.util.List;
 @Entity
 public class ExamBatch {
   @Id
+  @Column(name = "id")
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
 
   private String name;
@@ -21,16 +24,16 @@ public class ExamBatch {
   private String students;   // parse to List<ExamBatchStudentsDto>
 
   @ManyToOne
-  @JoinColumn(name = "exam_id")
+  @JoinColumn(name = "fk_exam_id")
   private Exam exam;
 
-  @OneToMany
-  @JoinColumn(name = "course_id")
-  private List<Course> courseList;
+  @ManyToOne
+  @JoinColumn(name = "fk_course_id")
+  private Course courseList;
 
-  @OneToMany
-  @JoinColumn(name = "faculty_id")
-  private List<Faculty> facultyList;
+  @ManyToOne
+  @JoinColumn(name = "fk_faculty_id")
+  private Faculty facultyList;
 
   private String venue;
 }

@@ -19,7 +19,7 @@ public class Course {
   private int semester;
 
   @ManyToOne
-  @JoinColumn(name = "department_id")
+  @JoinColumn(name = "fk_department_id")
   private Department department;
 
   private String batch;

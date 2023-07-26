@@ -23,6 +23,6 @@ public class Faculty {
   private String phone;
 
   @ManyToOne
-  @JoinColumn(name = "department_id")
+  @JoinColumn(name = "fk_department_id")
   private Department department;
 }

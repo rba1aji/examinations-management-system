@@ -15,6 +15,6 @@ public class Department {
   private String name;
 
   @ManyToOne
-  @JoinColumn(name = "degree_id")
+  @JoinColumn(name = "fk_degree_id")
   private Degree degree;
 }

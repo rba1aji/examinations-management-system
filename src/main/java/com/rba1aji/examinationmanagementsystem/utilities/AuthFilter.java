@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,7 +40,8 @@ public class AuthFilter extends OncePerRequestFilter {
       UserDetails userDetails = new User(
           null,
           null,
-          new ArrayList<>());
+          new ArrayList<>()
+      );
       var authToken = new UsernamePasswordAuthenticationToken(
           userDetails,
           null,

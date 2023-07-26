@@ -15,4 +15,5 @@ public class Exam {
   private int semester;
 
   private String batch;
+
 }

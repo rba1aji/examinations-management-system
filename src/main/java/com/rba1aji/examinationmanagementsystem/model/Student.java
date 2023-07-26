@@ -12,6 +12,10 @@ public class Student {
   @Id
   private long id;
 
+  private String password;
+
+  private String registrationNumber;
+
   private String dateOfBirth;
 
   private String fullName;
@@ -23,6 +27,6 @@ public class Student {
   private String phone;
 
   @ManyToOne
-  @JoinColumn(name = "department_id")
+  @JoinColumn(name = "fk_department_id")
   private Department department;
 }
