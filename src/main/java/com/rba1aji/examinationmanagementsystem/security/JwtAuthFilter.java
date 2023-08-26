@@ -1,16 +1,15 @@
-package com.rba1aji.examinationmanagementsystem.utilities;
+package com.rba1aji.examinationmanagementsystem.security;
 
 import com.rba1aji.examinationmanagementsystem.dto.JwtClaimsDto;
+import com.rba1aji.examinationmanagementsystem.utilities.JwtAuthUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
-import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,9 +18,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-
 @Component
-public class AuthFilter extends OncePerRequestFilter {
+public class JwtAuthFilter extends OncePerRequestFilter {
 
   @Autowired
   private JwtAuthUtils jwtAuthUtils;
@@ -40,7 +38,7 @@ public class AuthFilter extends OncePerRequestFilter {
       UserDetails userDetails = new User(
           null,
           null,
-          new ArrayList<>()
+          List.of(claims)
       );
       var authToken = new UsernamePasswordAuthenticationToken(
           userDetails,

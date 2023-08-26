@@ -1,17 +1,21 @@
 package com.rba1aji.examinationmanagementsystem.model;
 
-import com.rba1aji.examinationmanagementsystem.dto.ExamBatchStudentsDto;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
+import java.sql.Array;
 import java.sql.Timestamp;
-import java.util.List;
 
 @Data
 @Entity
 public class ExamBatch {
   @Id
-  @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
 
@@ -29,11 +33,11 @@ public class ExamBatch {
 
   @ManyToOne
   @JoinColumn(name = "fk_course_id")
-  private Course courseList;
+  private Course course;
 
   @ManyToOne
   @JoinColumn(name = "fk_faculty_id")
-  private Faculty facultyList;
+  private Faculty faculty;
 
   private String venue;
 }
