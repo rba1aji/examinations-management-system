@@ -12,16 +12,17 @@ import org.springframework.stereotype.Component;
 import java.nio.file.AccessDeniedException;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Component
 public class JwtAuthUtils {
 
-  @Value("${jwt.secret_key}")
+  @Value("${jwt.secret_key}" )
   private String secretKey;
 
-  @Value("${jwt.expiration_hours}")
+  @Value("${jwt.expiration_hours}" )
   private long expirationHours;
 
   private String encodedSecret;
@@ -44,13 +45,14 @@ public class JwtAuthUtils {
   }
 
   public String generateToken(JwtClaimsDto claimsDto) {
-    Map<String, Object> claimsMap = Map.of("role", claimsDto.getRole());
+    Map<String, Object> claimsMap = new HashMap<>();
+    claimsMap.put("role", claimsDto.getRole());
     long now = System.currentTimeMillis();
     return Jwts.builder()
-        .signWith(SignatureAlgorithm.ES256, secretKey)
-        .setIssuedAt(new Date())
+        .setClaims(claimsMap)
+        .setIssuedAt(new Date(now))
         .setExpiration(getExpirationTime())
-        .addClaims(claimsMap)
+        .signWith(SignatureAlgorithm.HS256, encodedSecret)
         .compact();
   }
 
@@ -67,9 +69,9 @@ public class JwtAuthUtils {
     try {
       Claims claims = Jwts.parser().setSigningKey(encodedSecret).parseClaimsJws(token).getBody();
       JwtClaimsDto claimsDto = new JwtClaimsDto();
-      claimsDto.setRole(claims.get("role").toString());
+      claimsDto.setRole(claims.get("role" ).toString());
       return claimsDto;
-    }catch (Exception e){
+    } catch (Exception e) {
       throw new AccessDeniedException(e.getMessage());
     }
   }

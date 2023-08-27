@@ -1,12 +1,19 @@
 package com.rba1aji.examinationmanagementsystem.service;
 
+import com.rba1aji.examinationmanagementsystem.constant.UserRoleConstant;
 import com.rba1aji.examinationmanagementsystem.dto.JwtClaimsDto;
 import com.rba1aji.examinationmanagementsystem.dto.request.LoginRequestDto;
+import com.rba1aji.examinationmanagementsystem.dto.response.AuthTokenDto;
+import com.rba1aji.examinationmanagementsystem.model.Admin;
+import com.rba1aji.examinationmanagementsystem.model.Faculty;
 import com.rba1aji.examinationmanagementsystem.model.Student;
+import com.rba1aji.examinationmanagementsystem.repository.AdminRepository;
+import com.rba1aji.examinationmanagementsystem.repository.FacultyRepository;
 import com.rba1aji.examinationmanagementsystem.repository.StudentRepository;
 import com.rba1aji.examinationmanagementsystem.utilities.BaseResponse;
 import com.rba1aji.examinationmanagementsystem.utilities.EncryptionUtils;
 import com.rba1aji.examinationmanagementsystem.utilities.JwtAuthUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,39 +23,69 @@ import java.util.Optional;
 
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LoginService {
 
-  @Autowired
-  private StudentRepository studentRepository;
-
-  @Autowired
-  private JwtAuthUtils jwtAuthUtils;
-
-  @Autowired
-  private BaseResponse baseResponse;
+  private final AdminRepository adminRepository;
+  private final FacultyRepository facultyRepository;
+  private final StudentRepository studentRepository;
+  private final JwtAuthUtils jwtAuthUtils;
+  private final BaseResponse baseResponse;
 
   public ResponseEntity<?> adminLogin(LoginRequestDto dto) {
-    return null;
+    try {
+      Optional<Admin> admin = adminRepository.findById(dto.getUsername());
+      if (admin.isEmpty())
+        return baseResponse.errorResponse("Invalid username!", HttpStatus.NOT_FOUND);
+      if (!EncryptionUtils.verify(dto.getPassword(), admin.get().getPassword()))
+        return baseResponse.errorResponse("Invalid password!", HttpStatus.UNAUTHORIZED);
+      var claims = new JwtClaimsDto();
+      claims.setRole(UserRoleConstant.ADMIN);
+      return baseResponse.successResponse(
+          new AuthTokenDto(
+              jwtAuthUtils.generateToken(claims)
+          )
+      );
+    } catch (Exception e) {
+      return baseResponse.errorResponse(e);
+    }
   }
 
   public ResponseEntity<?> facultyLogin(LoginRequestDto dto) {
-    return null;
+    try {
+      Optional<Faculty> faculty = facultyRepository.findById(Long.parseLong(dto.getUsername()));
+      if (faculty.isEmpty())
+        return baseResponse.errorResponse("Invalid username!", HttpStatus.NOT_FOUND);
+      if (!EncryptionUtils.verify(dto.getPassword(), faculty.get().getPassword()))
+        return baseResponse.errorResponse("Invalid password!", HttpStatus.UNAUTHORIZED);
+      var claims = new JwtClaimsDto();
+      claims.setRole(UserRoleConstant.FACULTY);
+      return baseResponse.successResponse(
+          new AuthTokenDto(
+              jwtAuthUtils.generateToken(claims)
+          )
+      );
+    } catch (Exception e) {
+      return baseResponse.errorResponse(e);
+    }
   }
 
   public ResponseEntity<?> studentLogin(LoginRequestDto dto) {
     try {
-      long id = Long.parseLong(dto.getId());
-      Optional<Student> student = studentRepository.findById(id);
-      if (student.isEmpty()) {
-        return baseResponse.errorResponse("Student not found with id: " + id, HttpStatus.NOT_FOUND);
-      }
-      if (!EncryptionUtils.verify(dto.getPassword(), student.get().getPassword())) {
-        return baseResponse.errorResponse("Invalid password", HttpStatus.UNAUTHORIZED);
-      }
+      Optional<Student> student = studentRepository.findByRegisterNumber(dto.getUsername());
+      if (student.isEmpty())
+        return baseResponse.errorResponse("Invalid username!", HttpStatus.NOT_FOUND);
+      if (!EncryptionUtils.verify(dto.getPassword(), student.get().getPassword()))
+        return baseResponse.errorResponse("Invalid password!", HttpStatus.UNAUTHORIZED);
       var claims = new JwtClaimsDto();
-      claims.setRole("student");
-      return baseResponse.successResponse(jwtAuthUtils.generateToken(claims));
+      claims.setRole(UserRoleConstant.STUDENT);
+      return baseResponse.successResponse(
+          new AuthTokenDto(
+              jwtAuthUtils.generateToken(claims)
+          )
+      );
     } catch (Exception e) {
+      e.printStackTrace();
       return baseResponse.errorResponse(e);
     }
   }

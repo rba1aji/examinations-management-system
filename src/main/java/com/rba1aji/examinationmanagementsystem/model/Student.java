@@ -1,5 +1,6 @@
 package com.rba1aji.examinationmanagementsystem.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,7 +18,8 @@ public class Student {
 
   private String password;
 
-  private String registrationNumber;
+  @Column(unique = true)
+  private String registerNumber;
 
   private String dateOfBirth;
 
@@ -30,6 +32,6 @@ public class Student {
   private String phone;
 
   @ManyToOne
-  @JoinColumn(name = "fk_department_id")
+  @JoinColumn(name = "fk_department_id" )
   private Department department;
 }

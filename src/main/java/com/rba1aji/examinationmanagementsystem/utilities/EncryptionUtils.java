@@ -6,10 +6,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class EncryptionUtils {
   public static String encrypt(String password) {
-    return BCrypt.hashpw(password, BCrypt.gensalt());
+    return BCrypt.hashpw(password, BCrypt.gensalt(10));
   }
 
   public static boolean verify(String password, String hashed) {
     return BCrypt.checkpw(password, hashed);
+  }
+
+  public static void main(String[] args) {
+    System.out.println(encrypt("13122003"));
   }
 }
