@@ -20,10 +20,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SecurityConfig {
 
-  private final JwtAuthFilter jwtAuthFilter;
-
-  private final CrossOriginFilter crossOriginFilter;
-
+  private final JwtAuthFilter          jwtAuthFilter;
+  private final CrossOriginFilter      crossOriginFilter;
   private final UnauthorizedEntryPoint unauthorizedEntryPoint;
 
   @Bean

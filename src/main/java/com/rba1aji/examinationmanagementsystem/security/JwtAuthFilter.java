@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,10 +20,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-  @Autowired
-  private JwtAuthUtils jwtAuthUtils;
+  private final JwtAuthUtils jwtAuthUtils;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -35,15 +36,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       final String token = authorization.split(" ")[1].trim();
       JwtClaimsDto claims = jwtAuthUtils.decodeToken(token);
       request.setAttribute("claims", claims);
-      UserDetails userDetails = new User(
-          null,
-          null,
+      UserDetails user = new User(
+          claims.getUsername(),
+          claims.getPassword(),
           List.of(claims)
       );
       var authToken = new UsernamePasswordAuthenticationToken(
-          userDetails,
+          user,
           null,
-          userDetails.getAuthorities()
+          user.getAuthorities()
       );
       SecurityContextHolder.getContext().setAuthentication(authToken);
       filterChain.doFilter(request, response);

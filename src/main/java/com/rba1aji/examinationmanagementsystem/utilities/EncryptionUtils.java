@@ -14,6 +14,6 @@ public class EncryptionUtils {
   }
 
   public static void main(String[] args) {
-    System.out.println(encrypt("13122003"));
+    System.out.println(encrypt("balaji"));
   }
 }

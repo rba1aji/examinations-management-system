@@ -19,10 +19,10 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class JwtAuthUtils {
 
-  @Value("${jwt.secret_key}" )
+  @Value("${jwt.secret_key}")
   private String secretKey;
 
-  @Value("${jwt.expiration_hours}" )
+  @Value("${jwt.expiration_hours}")
   private long expirationHours;
 
   private String encodedSecret;
@@ -47,6 +47,8 @@ public class JwtAuthUtils {
   public String generateToken(JwtClaimsDto claimsDto) {
     Map<String, Object> claimsMap = new HashMap<>();
     claimsMap.put("role", claimsDto.getRole());
+    claimsMap.put("username", claimsDto.getUsername());
+    claimsMap.put("password", claimsDto.getPassword());
     long now = System.currentTimeMillis();
     return Jwts.builder()
         .setClaims(claimsMap)
@@ -68,8 +70,11 @@ public class JwtAuthUtils {
   public JwtClaimsDto decodeToken(String token) throws AccessDeniedException {
     try {
       Claims claims = Jwts.parser().setSigningKey(encodedSecret).parseClaimsJws(token).getBody();
-      JwtClaimsDto claimsDto = new JwtClaimsDto();
-      claimsDto.setRole(claims.get("role" ).toString());
+      JwtClaimsDto claimsDto = JwtClaimsDto.builder()
+          .role((String) claims.get("role"))
+          .username((String) claims.get("username"))
+          .password((String) claims.get("password"))
+          .build();
       return claimsDto;
     } catch (Exception e) {
       throw new AccessDeniedException(e.getMessage());
