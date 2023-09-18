@@ -7,8 +7,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Entity
 public class Student {
@@ -21,17 +29,17 @@ public class Student {
   @Column(unique = true)
   private String registerNumber;
 
-  private String dateOfBirth;
+  private Date dateOfBirth;
 
   private String fullName;
+
+  @ManyToOne
+  @JoinColumn(name = "fk_department_code")
+  private Department department;
 
   private String section;
 
   private String batch;
 
   private String phone;
-
-  @ManyToOne
-  @JoinColumn(name = "fk_department_id" )
-  private Department department;
 }

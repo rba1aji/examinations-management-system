@@ -1,5 +1,6 @@
 package com.rba1aji.examinationmanagementsystem.config;
 
+import com.rba1aji.examinationmanagementsystem.constant.UserRoleConstant;
 import com.rba1aji.examinationmanagementsystem.security.JwtAuthFilter;
 import com.rba1aji.examinationmanagementsystem.security.CrossOriginFilter;
 import com.rba1aji.examinationmanagementsystem.security.UnauthorizedEntryPoint;
@@ -31,6 +32,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(authorize -> {
           authorize
               .requestMatchers("/login/**").permitAll()
+              .requestMatchers("/registration/**").hasAnyAuthority(UserRoleConstant.ADMIN)
               .anyRequest().permitAll();
         })
         .exceptionHandling(

@@ -2,6 +2,7 @@ package com.rba1aji.examinationmanagementsystem.utilities;
 
 import com.rba1aji.examinationmanagementsystem.dto.JwtClaimsDto;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.PostConstruct;
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
 import java.nio.file.AccessDeniedException;
 import java.util.Base64;
 import java.util.Date;
@@ -76,6 +78,8 @@ public class JwtAuthUtils {
           .password((String) claims.get("password"))
           .build();
       return claimsDto;
+    } catch (ExpiredJwtException e) {
+      throw new AccessDeniedException("Access token expired!");
     } catch (Exception e) {
       throw new AccessDeniedException(e.getMessage());
     }
