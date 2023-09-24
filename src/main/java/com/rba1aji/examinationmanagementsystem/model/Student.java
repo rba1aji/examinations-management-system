@@ -1,5 +1,6 @@
 package com.rba1aji.examinationmanagementsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,8 +23,10 @@ import java.util.Date;
 public class Student {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @JsonIgnore
   private long id;
 
+  @JsonIgnore
   private String password;
 
   @Column(unique = true)

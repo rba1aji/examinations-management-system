@@ -37,7 +37,7 @@ public class RegistrationController {
   }
 
   @PostMapping("/excel-register-students")
-  public ResponseEntity<?> excelRegisterStudents(@RequestParam("file") MultipartFile file) {
+  public ResponseEntity<?> excelRegisterStudents(@RequestPart("file") MultipartFile file) {
     return userRegistrationService.excelRegisterStudents(file);
   }
 

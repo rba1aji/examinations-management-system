@@ -10,4 +10,12 @@ class ExaminationManagementSystemApplicationTests {
 	void contextLoads() {
 	}
 
+	@Test
+	void readNumberCell(){
+		System.out.println(
+//				String.valueOf(7.3882014208E10)
+//				new DataFormatter().formatCellValue();
+		);
+	}
+
 }
