@@ -1,16 +1,33 @@
 package com.rba1aji.examinationmanagementsystem.model;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Course {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  private long id;
+  @JsonIgnore
+  private int id;
 
+  @Column(unique = true, nullable = false)
   private String code;
+
+  private String acronym;
 
   private String name;
 

@@ -30,7 +30,6 @@ public class Faculty {
   private String username;
 
   @NotBlank
-  @JsonIgnore
   private String password;
 
   @NotBlank

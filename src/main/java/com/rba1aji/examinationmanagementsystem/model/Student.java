@@ -26,7 +26,6 @@ public class Student {
   @JsonIgnore
   private long id;
 
-  @JsonIgnore
   private String password;
 
   @Column(unique = true)

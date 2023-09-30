@@ -41,14 +41,22 @@ public class ExcelCellUtils {
     return null;
   }
 
+  public static int getInt(Cell cell) {
+    String value = getString(cell);
+    if (ValidationUtils.areNotNullAndNotEmpty(value)) {
+      return ValidationUtils.getInt(value);
+    }
+    return 0;
+  }
+
   public static String getValue(Cell cell) {
     try {
       if (CellType.STRING.equals(cell.getCellType())) {
         return cell.getStringCellValue();
       } else if (CellType.NUMERIC.equals(cell.getCellType())) {
-        return cell.getNumericCellValue() + "";
+        return String.valueOf(cell.getNumericCellValue());
       } else if (CellType.BOOLEAN.equals(cell.getCellType())) {
-        return cell.getBooleanCellValue() + "";
+        return String.valueOf(cell.getBooleanCellValue());
       } else if (CellType.ERROR.equals(cell.getCellType())) {
         return "";
       }

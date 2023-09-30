@@ -1,6 +1,6 @@
 package com.rba1aji.examinationmanagementsystem.security;
 
-import com.rba1aji.examinationmanagementsystem.dto.RepoSaveErrorDto;
+import com.rba1aji.examinationmanagementsystem.dto.RepoSaveResponseDto;
 import com.rba1aji.examinationmanagementsystem.model.Department;
 import com.rba1aji.examinationmanagementsystem.model.Faculty;
 import com.rba1aji.examinationmanagementsystem.model.Student;
@@ -53,8 +53,10 @@ public class UserRegistrationService {
       Sheet sheet = workbook.getSheetAt(0);
       sheet.removeRow(sheet.getRow(0));                                               // remove header row
       sheet.forEach(row -> {
+        var response = new RepoSaveResponseDto();
+        Student student = null;
         try {
-          Student student = Student.builder()
+          student = Student.builder()
               .registerNumber(ExcelCellUtils.getString(row.getCell(0)))
               .dateOfBirth(ExcelCellUtils.getDate(row.getCell(1)))
               .fullName(ExcelCellUtils.getString(row.getCell(2)))
@@ -64,20 +66,15 @@ public class UserRegistrationService {
               .phone(ExcelCellUtils.getString(row.getCell(6)))
               .password(EncryptionUtils.encrypt(ExcelCellUtils.getDateString(row.getCell(1))))
               .build();
-          try {
-            student = this.registerStudent(student);
-            responseList.add(student);
-          } catch (Exception e) {
-            var error = new RepoSaveErrorDto();
-            error.setId(student.getRegisterNumber());
-            error.setMessage(e.getMessage());
-            responseList.add(error);
-          }
+          student = this.saveStudent(student);
+          response.setStatus(true);
+          response.setId(student.getRegisterNumber());
+          response.setMessage("Success");
         } catch (Exception e) {
-          var error = new RepoSaveErrorDto();
-          error.setMessage(e.getMessage());
-          responseList.add(error);
+          response.setId(student != null ? student.getRegisterNumber() : null);
+          response.setMessage(e.getMessage());
         }
+        responseList.add(response);
       });
       return baseResponse.successResponse(responseList);
     } catch (Exception e) {
@@ -92,8 +89,10 @@ public class UserRegistrationService {
       Sheet sheet = workbook.getSheetAt(0);
       sheet.removeRow(sheet.getRow(0));                                               // remove header row
       sheet.forEach(row -> {
+        var response = new RepoSaveResponseDto();
+        Faculty faculty = null;
         try {
-          Faculty faculty = Faculty.builder()
+          faculty = Faculty.builder()
               .username(ExcelCellUtils.getString(row.getCell(0)))
               .password(EncryptionUtils.encrypt(ExcelCellUtils.getString(row.getCell(1))))
               .fullName(ExcelCellUtils.getString(row.getCell(2)))
@@ -102,20 +101,15 @@ public class UserRegistrationService {
               .phone(ExcelCellUtils.getString(row.getCell(5)))
               .email(ExcelCellUtils.getString(row.getCell(6)))
               .build();
-          try {
-            faculty = this.registerFaculty(faculty);
-            responseList.add(faculty);
-          } catch (Exception e) {
-            var error = new RepoSaveErrorDto();
-            error.setId(faculty.getUsername());
-            error.setMessage(e.getMessage());
-            responseList.add(error);
-          }
+          faculty = this.saveFaculty(faculty);
+          response.setStatus(true);
+          response.setId(faculty.getUsername());
+          response.setMessage("Success");
         } catch (Exception e) {
-          var error = new RepoSaveErrorDto();
-          error.setMessage(e.getMessage());
-          responseList.add(error);
+          response.setId(faculty != null ? faculty.getUsername() : null);
+          response.setMessage(e.getMessage());
         }
+        responseList.add(response);
       });
       return baseResponse.successResponse(responseList);
     } catch (Exception e) {
@@ -125,12 +119,12 @@ public class UserRegistrationService {
   }
 
   @Transactional
-  public Student registerStudent(Student student) {
+  public Student saveStudent(Student student) {
     return studentRepository.saveAndFlush(student);
   }
 
   @Transactional
-  public Faculty registerFaculty(Faculty faculty) {
+  public Faculty saveFaculty(Faculty faculty) {
     return facultyRepository.saveAndFlush(faculty);
   }
 }
