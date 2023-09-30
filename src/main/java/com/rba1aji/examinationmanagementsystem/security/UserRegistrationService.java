@@ -16,8 +16,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -31,12 +29,12 @@ import java.util.List;
 @Slf4j
 public class UserRegistrationService {
 
-  private final BaseResponse      baseResponse;
+  private final BaseResponse baseResponse;
   private final FacultyRepository facultyRepository;
   private final StudentRepository studentRepository;
 
   @Transactional
-  public ResponseEntity<?> registerFaculty(Faculty faculty) {
+  public ResponseEntity<?> registerSingleFaculty(Faculty faculty) {
     try {
       if (facultyRepository.findByUsername(faculty.getUsername()).isPresent())
         return baseResponse.errorResponse("Faculty with this username already exists!", HttpStatus.UNPROCESSABLE_ENTITY);
@@ -69,15 +67,48 @@ public class UserRegistrationService {
           try {
             student = this.registerStudent(student);
             responseList.add(student);
-          } catch (DataIntegrityViolationException e) {
+          } catch (Exception e) {
             var error = new RepoSaveErrorDto();
             error.setId(student.getRegisterNumber());
-            error.setMessage("Already exists!");
+            error.setMessage(e.getMessage());
             responseList.add(error);
-          } catch (InvalidDataAccessApiUsageException e) {
+          }
+        } catch (Exception e) {
+          var error = new RepoSaveErrorDto();
+          error.setMessage(e.getMessage());
+          responseList.add(error);
+        }
+      });
+      return baseResponse.successResponse(responseList);
+    } catch (Exception e) {
+      log.info("Error in excelRegisterStudents(): ", e);
+      return baseResponse.errorResponse(e);
+    }
+  }
+
+  public ResponseEntity<?> excelRegisterFaculties(MultipartFile file) {
+    List<Object> responseList = new ArrayList<>();
+    try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
+      Sheet sheet = workbook.getSheetAt(0);
+      sheet.removeRow(sheet.getRow(0));                                               // remove header row
+      sheet.forEach(row -> {
+        try {
+          Faculty faculty = Faculty.builder()
+              .username(ExcelCellUtils.getString(row.getCell(0)))
+              .password(EncryptionUtils.encrypt(ExcelCellUtils.getString(row.getCell(1))))
+              .fullName(ExcelCellUtils.getString(row.getCell(2)))
+              .designation(ExcelCellUtils.getString(row.getCell(3)))
+              .department(Department.builder().code(ExcelCellUtils.getString(row.getCell(4))).build())
+              .phone(ExcelCellUtils.getString(row.getCell(5)))
+              .email(ExcelCellUtils.getString(row.getCell(6)))
+              .build();
+          try {
+            faculty = this.registerFaculty(faculty);
+            responseList.add(faculty);
+          } catch (Exception e) {
             var error = new RepoSaveErrorDto();
-            error.setId(student.getRegisterNumber());
-            error.setMessage("Invalid data!");
+            error.setId(faculty.getUsername());
+            error.setMessage(e.getMessage());
             responseList.add(error);
           }
         } catch (Exception e) {
@@ -98,7 +129,8 @@ public class UserRegistrationService {
     return studentRepository.saveAndFlush(student);
   }
 
-  public ResponseEntity<?> excelRegisterFaculties(MultipartFile file) {
-    return null;
+  @Transactional
+  public Faculty registerFaculty(Faculty faculty) {
+    return facultyRepository.saveAndFlush(faculty);
   }
 }

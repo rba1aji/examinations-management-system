@@ -2,7 +2,6 @@ package com.rba1aji.examinationmanagementsystem.controller;
 
 import com.rba1aji.examinationmanagementsystem.dto.request.DegreeSaveDto;
 import com.rba1aji.examinationmanagementsystem.dto.request.DepartmentSaveDto;
-import com.rba1aji.examinationmanagementsystem.model.Department;
 import com.rba1aji.examinationmanagementsystem.model.Faculty;
 import com.rba1aji.examinationmanagementsystem.security.UserRegistrationService;
 import com.rba1aji.examinationmanagementsystem.service.DegreeService;
@@ -14,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,7 +31,7 @@ public class RegistrationController {
 
   @PostMapping("/register-faculty")
   public ResponseEntity<?> registerFaculty(@Valid @RequestBody Faculty faculty) {
-    return userRegistrationService.registerFaculty(faculty);
+    return userRegistrationService.registerSingleFaculty(faculty);
   }
 
   @PostMapping("/excel-register-students")

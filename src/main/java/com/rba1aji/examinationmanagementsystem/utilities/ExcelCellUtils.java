@@ -5,7 +5,6 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.springframework.stereotype.Component;
 
-import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -13,21 +12,16 @@ import java.util.Date;
 public class ExcelCellUtils {
 
   private static final DataFormatter dataFormatter = new DataFormatter();
-  private static final DecimalFormat decimalFormat = new DecimalFormat("0");
 
   public static String getString(Cell cell) {
-    try {
-      String value = dataFormatter.formatCellValue(cell);
-      return value;
-    } catch (Exception e) {
-      return null;
-    }
+    return dataFormatter.formatCellValue(cell);
   }
 
   public static Date getDate(Cell cell) {
     try {
       return cell.getDateCellValue();
     } catch (Exception e) {
+      e.printStackTrace();
       return null;
     }
   }
@@ -36,11 +30,15 @@ public class ExcelCellUtils {
     // format: ddmmyyyy
     try {
       Calendar calendar = Calendar.getInstance();
-      calendar.setTime(getDate(cell));
-      return String.format("%02d", calendar.get(Calendar.DAY_OF_MONTH)) + String.format("%02d", calendar.get(Calendar.MONTH) + 1) + calendar.get(Calendar.YEAR);
+      Date date = getDate(cell);
+      if (date != null) {
+        calendar.setTime(date);
+        return String.format("%02d", calendar.get(Calendar.DAY_OF_MONTH)) + String.format("%02d", calendar.get(Calendar.MONTH) + 1) + calendar.get(Calendar.YEAR);
+      }
     } catch (Exception e) {
-      return null;
+      e.printStackTrace();
     }
+    return null;
   }
 
   public static String getValue(Cell cell) {
@@ -55,6 +53,7 @@ public class ExcelCellUtils {
         return "";
       }
     } catch (Exception e) {
+      e.printStackTrace();
     }
     return null;
   }
