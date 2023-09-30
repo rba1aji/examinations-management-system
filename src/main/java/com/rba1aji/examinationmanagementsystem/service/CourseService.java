@@ -53,6 +53,7 @@ public class CourseService {
               .semester(ExcelCellUtils.getInt(row.getCell(4)))
               .department(Department.builder().code(ExcelCellUtils.getString(row.getCell(5))).build())
               .batch(ExcelCellUtils.getString(row.getCell(6)))
+              .active(true)
               .build();
           course = this.saveCourse(course);
           response.setStatus(true);
@@ -74,6 +75,15 @@ public class CourseService {
   @Transactional
   public Course saveCourse(Course course) {
     return courseRepository.saveAndFlush(course);
+  }
+
+  public ResponseEntity<?> getAllCourses(String department, String semester, String batch) {
+    try {
+      List<Course> courseList = courseRepository.findAllByOptionalFilters(department, semester, batch);
+      return baseResponse.successResponse(courseList);
+    } catch (Exception e) {
+      return baseResponse.errorResponse(e);
+    }
   }
 
 }

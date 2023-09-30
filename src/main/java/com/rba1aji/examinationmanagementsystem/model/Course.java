@@ -40,4 +40,6 @@ public class Course {
   private Department department;
 
   private String batch;
+
+  private boolean active = true;
 }
