@@ -21,8 +21,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SecurityConfig {
 
-  private final JwtAuthFilter          jwtAuthFilter;
-  private final CrossOriginFilter      crossOriginFilter;
+  private final JwtAuthFilter jwtAuthFilter;
+  private final CrossOriginFilter crossOriginFilter;
   private final UnauthorizedEntryPoint unauthorizedEntryPoint;
 
   @Bean
@@ -33,6 +33,7 @@ public class SecurityConfig {
           authorize
               .requestMatchers("/login/**").permitAll()
               .requestMatchers("/registration/**").hasAnyAuthority(UserRoleConstant.ADMIN)
+              .requestMatchers("/department/**").authenticated()
               .anyRequest().permitAll();
         })
         .exceptionHandling(
