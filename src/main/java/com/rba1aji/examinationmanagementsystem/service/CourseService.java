@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -81,6 +82,18 @@ public class CourseService {
     try {
       List<Course> courseList = courseRepository.findAllByOptionalFilters(department, semester, batch);
       return baseResponse.successResponse(courseList);
+    } catch (Exception e) {
+      return baseResponse.errorResponse(e);
+    }
+  }
+
+  public ResponseEntity<?> getCourseByCode(String code) {
+    try {
+      var course = courseRepository.findByCode(code);
+      if (course.isPresent()) {
+        return baseResponse.successResponse(course);
+      }
+      return baseResponse.errorResponse("Course not found!", HttpStatus.NOT_FOUND);
     } catch (Exception e) {
       return baseResponse.errorResponse(e);
     }

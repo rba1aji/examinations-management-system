@@ -17,10 +17,15 @@ public class CourseController {
   private final CourseService courseService;
 
   @GetMapping("/get-all-courses")
-  public ResponseEntity<?> getAllCourses(@RequestParam(value = "department", required = false) String department,
-                                         @RequestParam(value = "semester", required = false) String semester,
-                                         @RequestParam(value = "batch", required = false) String batch) {
-    return courseService.getAllCourses(department, semester, batch);
+  public ResponseEntity<?> getAllCourses(@RequestParam(name = "department", required = false) String departments,
+                                         @RequestParam(name = "semester", required = false) String semesters,
+                                         @RequestParam(name = "batch", required = false) String batches) {
+    return courseService.getAllCourses(departments, semesters, batches);
+  }
+
+  @GetMapping("/get-course")
+  public ResponseEntity<?> getCourse(@RequestParam(value = "code") String courseCode) {
+    return courseService.getCourseByCode(courseCode);
   }
 
 }

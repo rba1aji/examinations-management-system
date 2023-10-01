@@ -34,6 +34,7 @@ public class SecurityConfig {
               .requestMatchers("/login/**").permitAll()
               .requestMatchers("/registration/**").hasAnyAuthority(UserRoleConstant.ADMIN)
               .requestMatchers("/department/**").authenticated()
+              .requestMatchers("/course/**").authenticated()
               .anyRequest().permitAll();
         })
         .exceptionHandling(
