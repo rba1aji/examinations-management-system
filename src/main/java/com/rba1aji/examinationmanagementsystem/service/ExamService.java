@@ -46,20 +46,33 @@ public class ExamService {
     }
   }
 
-  public ResponseEntity<?> getAllExam(String batch, int semester) {
+  public ResponseEntity<?> getAllExam(String batch, String semester) {
     try {
-      List<Exam> examList = examRepository.findAll(examSpecifications.findAllByBatchAndSemesterOptional(batch, semester));
+      List<Exam> examList = examRepository.findAll(examSpecifications
+          .findAllByBatchAndSemesterOptional(batch, ValidationUtils.getInt(semester)));
       return baseResponse.successResponse(examList);
     } catch (Exception e) {
       return baseResponse.errorResponse(e);
     }
   }
 
-  public ResponseEntity<?> getExamById(String id) {
+  public ResponseEntity<?> getExamById(String examId) {
     try {
-      Optional<Exam> exam = examRepository.findById(ValidationUtils.getLong(id));
+      Optional<Exam> exam = examRepository.findById(ValidationUtils.getLong(examId));
       if (exam.isPresent()) {
         return baseResponse.successResponse(exam.get());
+      }
+      return baseResponse.errorResponse("Exam not found!", HttpStatus.NOT_FOUND);
+    } catch (Exception e) {
+      return baseResponse.errorResponse(e);
+    }
+  }
+
+  public ResponseEntity<?> getDepartmentsForExam(String examId) {
+    try {
+      Optional<Exam> exam = examRepository.findById(ValidationUtils.getLong(examId));
+      if (exam.isPresent()) {
+        return baseResponse.successResponse(exam.get().getDepartments());
       }
       return baseResponse.errorResponse("Exam not found!", HttpStatus.NOT_FOUND);
     } catch (Exception e) {

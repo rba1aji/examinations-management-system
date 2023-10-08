@@ -28,7 +28,7 @@ public class ExamController {
   @GetMapping("/get-all-exam")
   public ResponseEntity<?> getAllExam(
       @RequestParam(name = "batch", required = false) String batch,
-      @RequestParam(name = "semester", required = false, defaultValue = "0") int semester
+      @RequestParam(name = "semester", required = false) String semester
   ) {
     return examService.getAllExam(batch, semester);
   }
@@ -36,6 +36,11 @@ public class ExamController {
   @GetMapping("/get-exam")
   public ResponseEntity<?> getExam(@RequestParam(name = "examId") String id) {
     return examService.getExamById(id);
+  }
+
+  @GetMapping("/get-departments-for-exam")
+  public ResponseEntity<?> getDepartmentsForExam(@RequestParam("examId") String examId) {
+    return examService.getDepartmentsForExam(examId);
   }
 
 }
