@@ -14,7 +14,7 @@ public class ExamSpecifications {
     return (root, query, cb) -> {
       query.distinct(true);
       Predicate predicate = cb.equal(root.get("active"), true);
-      if (!ValidationUtils.isNotNullAndNotEmpty(batch)) {
+      if (ValidationUtils.isNotNullAndNotEmpty(batch)) {
         predicate = cb.and(predicate, cb.in(root.get("batch")).value(CommonUtils.commaSeperatedSqlString(batch)));
       }
       if (semester > 0) {
