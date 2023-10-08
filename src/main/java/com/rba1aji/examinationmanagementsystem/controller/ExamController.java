@@ -31,4 +31,9 @@ public class ExamController {
     return examService.getAllExam(batch, semester);
   }
 
+  @GetMapping("/get-exam")
+  public ResponseEntity<?> getExam(@RequestParam(name = "examId") String id) {
+    return examService.getExamById(id);
+  }
+
 }

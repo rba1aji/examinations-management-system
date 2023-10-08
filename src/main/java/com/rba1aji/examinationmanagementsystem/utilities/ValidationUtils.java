@@ -22,4 +22,12 @@ public class ValidationUtils {
   public static boolean isNotNullAndNotEmpty(String str) {
     return str != null && !str.trim().isEmpty();
   }
+
+  public static Long getLong(String str) {
+    try {
+      return Long.parseLong(str);
+    } catch (Exception e) {
+      return 0L;
+    }
+  }
 }
