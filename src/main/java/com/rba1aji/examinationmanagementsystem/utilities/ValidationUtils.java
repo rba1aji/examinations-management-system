@@ -1,6 +1,10 @@
 package com.rba1aji.examinationmanagementsystem.utilities;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class ValidationUtils {
 
@@ -29,5 +33,16 @@ public class ValidationUtils {
     } catch (Exception e) {
       return 0L;
     }
+  }
+
+  public static boolean validStartTimeEndTime(Timestamp startTime, Timestamp endTime) {
+    if (startTime == null || endTime == null) {
+      return false;
+    }
+    return startTime.compareTo(endTime) < 0;
+  }
+
+  public static boolean isNotNullAndNotEmpty(Collection<?> batch) {
+    return batch != null && !batch.isEmpty();
   }
 }

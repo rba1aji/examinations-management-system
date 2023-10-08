@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,17 +24,14 @@ public class Faculty {
   @JsonIgnore
   private long id;
 
-  @NotBlank
   @Column(unique = true)
   private String username;
 
-  @NotBlank
+  @JsonIgnore
   private String password;
 
-  @NotBlank
   private String fullName;
 
-  @NotBlank
   private String designation;
 
   private String phone;
@@ -43,6 +39,6 @@ public class Faculty {
   private String email;
 
   @ManyToOne
-  @JoinColumn(name = "fk_department_id" )
+  @JoinColumn
   private Department department;
 }

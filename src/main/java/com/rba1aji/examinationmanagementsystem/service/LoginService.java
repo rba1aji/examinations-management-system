@@ -35,9 +35,9 @@ public class LoginService {
     try {
       Optional<Admin> admin = adminRepository.findById(dto.getUsername());
       if (admin.isEmpty())
-        return baseResponse.errorResponse("Invalid username!", HttpStatus.NOT_FOUND);
+        return baseResponse.errorResponse(HttpStatus.NOT_FOUND, "Invalid username!");
       if (!EncryptionUtils.verify(dto.getPassword(), admin.get().getPassword()))
-        return baseResponse.errorResponse("Invalid password!", HttpStatus.UNAUTHORIZED);
+        return baseResponse.errorResponse(HttpStatus.UNAUTHORIZED, "Invalid password!");
       var claims = JwtClaimsDto.builder()
           .role(UserRoleConstant.ADMIN)
           .username(dto.getUsername())
@@ -57,9 +57,9 @@ public class LoginService {
     try {
       Optional<Faculty> faculty = facultyRepository.findByUsername(dto.getUsername());
       if (faculty.isEmpty())
-        return baseResponse.errorResponse("Invalid username!", HttpStatus.NOT_FOUND);
+        return baseResponse.errorResponse(HttpStatus.NOT_FOUND, "Invalid username!");
       if (!EncryptionUtils.verify(dto.getPassword(), faculty.get().getPassword()))
-        return baseResponse.errorResponse("Invalid password!", HttpStatus.UNAUTHORIZED);
+        return baseResponse.errorResponse(HttpStatus.UNAUTHORIZED, "Invalid password!");
       var claims = JwtClaimsDto.builder()
           .role(UserRoleConstant.FACULTY)
           .username(dto.getUsername())
@@ -79,9 +79,9 @@ public class LoginService {
     try {
       Optional<Student> student = studentRepository.findByRegisterNumber(dto.getUsername());
       if (student.isEmpty())
-        return baseResponse.errorResponse("Invalid username!", HttpStatus.NOT_FOUND);
+        return baseResponse.errorResponse(HttpStatus.NOT_FOUND, "Invalid username!");
       if (!EncryptionUtils.verify(dto.getPassword(), student.get().getPassword()))
-        return baseResponse.errorResponse("Invalid password!", HttpStatus.UNAUTHORIZED);
+        return baseResponse.errorResponse(HttpStatus.UNAUTHORIZED, "Invalid password!");
       var claims = JwtClaimsDto.builder()
           .role(UserRoleConstant.STUDENT)
           .username(dto.getUsername())

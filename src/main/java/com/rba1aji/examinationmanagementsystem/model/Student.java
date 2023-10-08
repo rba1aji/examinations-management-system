@@ -26,6 +26,7 @@ public class Student {
   @JsonIgnore
   private long id;
 
+  @JsonIgnore
   private String password;
 
   @Column(unique = true)
@@ -36,7 +37,7 @@ public class Student {
   private String fullName;
 
   @ManyToOne
-  @JoinColumn(name = "fk_department_code")
+  @JoinColumn
   private Department department;
 
   private String section;

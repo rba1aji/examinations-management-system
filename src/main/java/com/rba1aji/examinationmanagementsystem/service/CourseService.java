@@ -93,7 +93,7 @@ public class CourseService {
       if (course.isPresent()) {
         return baseResponse.successResponse(course);
       }
-      return baseResponse.errorResponse("Course not found!", HttpStatus.NOT_FOUND);
+      return baseResponse.errorResponse(HttpStatus.NOT_FOUND, "Course not found!");
     } catch (Exception e) {
       return baseResponse.errorResponse(e);
     }

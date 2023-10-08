@@ -6,6 +6,7 @@ import com.rba1aji.examinationmanagementsystem.model.Exam;
 import com.rba1aji.examinationmanagementsystem.repository.ExamRepository;
 import com.rba1aji.examinationmanagementsystem.repository.specification.ExamSpecifications;
 import com.rba1aji.examinationmanagementsystem.utilities.BaseResponse;
+import com.rba1aji.examinationmanagementsystem.utilities.CommonUtils;
 import com.rba1aji.examinationmanagementsystem.utilities.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,17 +29,18 @@ public class ExamService {
 
   public ResponseEntity<?> saveUpdateExam(AddUpdateExamReqDto dto) {
     try {
-      Exam exam = new Exam();
-      exam.setId(dto.getId());
-      exam.setName(dto.getName());
-      exam.setSemester(dto.getSemester());
-      exam.setBatch(dto.getBatch());
-      exam.setDepartments(Arrays.stream(dto.getDepartments().split(",")).map(code -> {
-        Department department = new Department();
-        department.setCode(code);
-        return department;
-      }).collect(Collectors.toSet()));
-      exam.setActive(true);
+      int semester = ValidationUtils.getInt(dto.getSemester());
+      if (semester == 0) {
+        return baseResponse.errorResponse(HttpStatus.UNPROCESSABLE_ENTITY, "Invalid semester!");
+      }
+      Exam exam = Exam.builder()
+          .id(ValidationUtils.getLong(dto.getId()))
+          .name(dto.getName())
+          .semester(semester)
+          .batch(dto.getBatch())
+          .departments(Arrays.stream(dto.getDepartments().split(",")).map(code -> Department.builder().code(code).build()).collect(Collectors.toSet()))
+          .active(true)
+          .build();
       exam = examRepository.saveAndFlush(exam);
       return baseResponse.successResponse(exam);
     } catch (Exception e) {
@@ -48,8 +50,10 @@ public class ExamService {
 
   public ResponseEntity<?> getAllExam(String batch, String semester) {
     try {
-      List<Exam> examList = examRepository.findAll(examSpecifications
-          .findAllByBatchAndSemesterOptional(batch, ValidationUtils.getInt(semester)));
+      List<Exam> examList = examRepository.findAll(examSpecifications.findAllByBatchAndSemesterOptional(
+          CommonUtils.getStringList(batch),
+          CommonUtils.getIntegerList(semester))
+      );
       return baseResponse.successResponse(examList);
     } catch (Exception e) {
       return baseResponse.errorResponse(e);
@@ -62,7 +66,7 @@ public class ExamService {
       if (exam.isPresent()) {
         return baseResponse.successResponse(exam.get());
       }
-      return baseResponse.errorResponse("Exam not found!", HttpStatus.NOT_FOUND);
+      return baseResponse.errorResponse(HttpStatus.NOT_FOUND, "Exam not found!");
     } catch (Exception e) {
       return baseResponse.errorResponse(e);
     }
@@ -74,7 +78,7 @@ public class ExamService {
       if (exam.isPresent()) {
         return baseResponse.successResponse(exam.get().getDepartments());
       }
-      return baseResponse.errorResponse("Exam not found!", HttpStatus.NOT_FOUND);
+      return baseResponse.errorResponse(HttpStatus.NOT_FOUND, "Exam not found!");
     } catch (Exception e) {
       return baseResponse.errorResponse(e);
     }

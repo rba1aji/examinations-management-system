@@ -2,6 +2,7 @@ package com.rba1aji.examinationmanagementsystem.controller;
 
 import com.rba1aji.examinationmanagementsystem.dto.request.DegreeSaveDto;
 import com.rba1aji.examinationmanagementsystem.dto.request.DepartmentSaveDto;
+import com.rba1aji.examinationmanagementsystem.dto.request.SaveFacultyReqDto;
 import com.rba1aji.examinationmanagementsystem.model.Course;
 import com.rba1aji.examinationmanagementsystem.model.Faculty;
 import com.rba1aji.examinationmanagementsystem.security.UserRegistrationService;
@@ -33,7 +34,7 @@ public class RegistrationController {
   private final CourseService courseService;
 
   @PostMapping("/register-faculty")
-  public ResponseEntity<?> registerFaculty(@Valid @RequestBody Faculty faculty) {
+  public ResponseEntity<?> registerFaculty(@Valid @RequestBody SaveFacultyReqDto faculty) {
     return userRegistrationService.registerSingleFaculty(faculty);
   }
 

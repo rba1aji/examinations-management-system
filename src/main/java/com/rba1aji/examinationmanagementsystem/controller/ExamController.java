@@ -27,7 +27,7 @@ public class ExamController {
 
   @GetMapping("/get-all-exam")
   public ResponseEntity<?> getAllExam(
-      @RequestParam(name = "batch", required = false) String batch,
+      @RequestParam(name = "batch") String batch,
       @RequestParam(name = "semester", required = false) String semester
   ) {
     return examService.getAllExam(batch, semester);

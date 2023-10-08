@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
 public class Course {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @JsonIgnore
   private int id;
 
   @Column(unique = true, nullable = false)
@@ -36,7 +35,7 @@ public class Course {
   private int semester;
 
   @ManyToOne
-  @JoinColumn(name = "fk_department_id")
+  @JoinColumn
   private Department department;
 
   private String batch;

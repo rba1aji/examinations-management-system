@@ -1,6 +1,7 @@
 package com.rba1aji.examinationmanagementsystem.security;
 
 import com.rba1aji.examinationmanagementsystem.dto.RepoSaveResponseDto;
+import com.rba1aji.examinationmanagementsystem.dto.request.SaveFacultyReqDto;
 import com.rba1aji.examinationmanagementsystem.model.Department;
 import com.rba1aji.examinationmanagementsystem.model.Faculty;
 import com.rba1aji.examinationmanagementsystem.model.Student;
@@ -9,6 +10,7 @@ import com.rba1aji.examinationmanagementsystem.repository.StudentRepository;
 import com.rba1aji.examinationmanagementsystem.utilities.BaseResponse;
 import com.rba1aji.examinationmanagementsystem.utilities.EncryptionUtils;
 import com.rba1aji.examinationmanagementsystem.utilities.ExcelCellUtils;
+import com.rba1aji.examinationmanagementsystem.utilities.ValidationUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,10 +36,21 @@ public class UserRegistrationService {
   private final StudentRepository studentRepository;
 
   @Transactional
-  public ResponseEntity<?> registerSingleFaculty(Faculty faculty) {
+  public ResponseEntity<?> registerSingleFaculty(SaveFacultyReqDto dto) {
     try {
+      Faculty faculty = Faculty.builder()
+          .username(dto.getUserName())
+          .password(EncryptionUtils.encrypt(dto.getPassword()))
+          .fullName(dto.getFullName())
+          .designation(dto.getDesignation())
+          .phone(dto.getPhone())
+          .email(dto.getEmail())
+          .build();
+      if (ValidationUtils.isNotNullAndNotEmpty(dto.getDepartmentCode())) {
+        faculty.setDepartment(Department.builder().code(dto.getDepartmentCode()).build());
+      }
       if (facultyRepository.findByUsername(faculty.getUsername()).isPresent())
-        return baseResponse.errorResponse("Faculty with this username already exists!", HttpStatus.UNPROCESSABLE_ENTITY);
+        return baseResponse.errorResponse(HttpStatus.UNPROCESSABLE_ENTITY, "Faculty username already exists!");
       faculty.setPassword(EncryptionUtils.encrypt(faculty.getPassword()));
       facultyRepository.save(faculty);
       return baseResponse.successResponse("Faculty registered successfully!");

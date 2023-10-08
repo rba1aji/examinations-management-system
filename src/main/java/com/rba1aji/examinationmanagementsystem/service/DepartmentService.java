@@ -56,7 +56,7 @@ public class DepartmentService {
       if (department.isPresent()) {
         return baseResponse.successResponse(department.get());
       }
-      return baseResponse.errorResponse("Department not found!", HttpStatus.NOT_FOUND);
+      return baseResponse.errorResponse(HttpStatus.NOT_FOUND, "Department not found!");
     } catch (Exception e) {
       return baseResponse.errorResponse(e);
     }
