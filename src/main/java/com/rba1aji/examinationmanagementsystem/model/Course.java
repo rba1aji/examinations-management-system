@@ -41,5 +41,6 @@ public class Course {
 
   private String batch;
 
+  @JsonIgnore
   private boolean active = true;
 }

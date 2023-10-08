@@ -80,7 +80,7 @@ public class CourseService {
 
   public ResponseEntity<?> getAllCourses(String department, String semester, String batch) {
     try {
-      List<Course> courseList = courseRepository.findAllByOptionalFilters(department, semester, batch);
+      List<Course> courseList = courseRepository.findAllByDepartmentCodeAndSemesterAndBatchOptional(department, semester, batch);
       return baseResponse.successResponse(courseList);
     } catch (Exception e) {
       return baseResponse.errorResponse(e);

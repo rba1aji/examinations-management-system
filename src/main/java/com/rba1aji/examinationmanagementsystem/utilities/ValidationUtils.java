@@ -19,4 +19,7 @@ public class ValidationUtils {
     }
   }
 
+  public static boolean isNotNullAndNotEmpty(String str) {
+    return str != null && !str.trim().isEmpty();
+  }
 }
