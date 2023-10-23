@@ -4,7 +4,7 @@ import com.rba1aji.examinationmanagementsystem.dto.request.AddUpdateExamReqDto;
 import com.rba1aji.examinationmanagementsystem.model.Department;
 import com.rba1aji.examinationmanagementsystem.model.Exam;
 import com.rba1aji.examinationmanagementsystem.repository.ExamRepository;
-import com.rba1aji.examinationmanagementsystem.repository.specification.ExamSpecifications;
+import com.rba1aji.examinationmanagementsystem.repository.specification.ExamSpecification;
 import com.rba1aji.examinationmanagementsystem.utilities.BaseResponse;
 import com.rba1aji.examinationmanagementsystem.utilities.CommonUtils;
 import com.rba1aji.examinationmanagementsystem.utilities.ValidationUtils;
@@ -25,7 +25,7 @@ public class ExamService {
 
   private final ExamRepository examRepository;
   private final BaseResponse baseResponse;
-  private final ExamSpecifications examSpecifications;
+  private final ExamSpecification examSpecification;
 
   public ResponseEntity<?> saveUpdateExam(AddUpdateExamReqDto dto) {
     try {
@@ -48,9 +48,9 @@ public class ExamService {
     }
   }
 
-  public ResponseEntity<?> getAllExam(String batch, String semester) {
+  public ResponseEntity<?> getAllExamByOptionalParams(String batch, String semester) {
     try {
-      List<Exam> examList = examRepository.findAll(examSpecifications.findAllByBatchAndSemesterOptional(
+      List<Exam> examList = examRepository.findAll(examSpecification.findAllByBatchAndSemesterOptional(
           CommonUtils.getStringList(batch),
           CommonUtils.getIntegerList(semester))
       );

@@ -1,5 +1,6 @@
 package com.rba1aji.examinationmanagementsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -49,4 +50,7 @@ public class ExamBatch {
   private Timestamp endTime;
 
   private String venue;
+
+  @JsonIgnore
+  private boolean active = true;
 }

@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
 public class Faculty {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @JsonIgnore
   private long id;
 
   @Column(unique = true)

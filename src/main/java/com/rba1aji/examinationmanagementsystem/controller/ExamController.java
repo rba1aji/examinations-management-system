@@ -30,7 +30,7 @@ public class ExamController {
       @RequestParam(name = "batch") String batch,
       @RequestParam(name = "semester", required = false) String semester
   ) {
-    return examService.getAllExam(batch, semester);
+    return examService.getAllExamByOptionalParams(batch, semester);
   }
 
   @GetMapping("/get-exam")

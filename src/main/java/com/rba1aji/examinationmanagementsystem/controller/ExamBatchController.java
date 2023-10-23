@@ -6,9 +6,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,6 +23,13 @@ public class ExamBatchController {
   @PostMapping("/add-update-exam-batch")
   public ResponseEntity<?> addUpdateExamBatch(@Valid @RequestBody AddUpdateExamBatchReqDto dto) {
     return examBatchService.saveUpdateExamBatch(dto);
+  }
+
+  @GetMapping("/get-all-exam-batch")
+  public ResponseEntity<?> getAllExamBatch(@RequestParam(name = "faculty", required = false) String facultyId,
+                                           @RequestParam(name = "exam", required = false) String examId,
+                                           @RequestParam(name = "course", required = false) String courseId) {
+    return examBatchService.getAllExamBatchByOptionalParams(facultyId, examId, courseId);
   }
 
 }

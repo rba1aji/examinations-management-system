@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class ExamSpecifications {
+public class ExamSpecification {
 
   public Specification<Exam> findAllByBatchAndSemesterOptional(List<String> batch, List<Integer> semester) {
     return (root, query, cb) -> {
