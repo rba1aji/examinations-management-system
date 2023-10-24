@@ -13,6 +13,7 @@ import com.rba1aji.examinationmanagementsystem.utilities.BaseResponse;
 import com.rba1aji.examinationmanagementsystem.utilities.EncryptionUtils;
 import com.rba1aji.examinationmanagementsystem.utilities.JwtAuthUtils;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class LoginService {
+public class AuthService {
 
   private final AdminRepository adminRepository;
   private final FacultyRepository facultyRepository;
@@ -47,8 +48,7 @@ public class LoginService {
           .username(dto.getUsername())
           .build();
       String token = jwtAuthUtils.generateToken(claims);
-      Cookie cookie = new Cookie("auth_token", token);
-      response.addCookie(cookie);
+      this.addAuthTokenInCookies(token);
       var data = Map.of("role", UserRoleConstant.ADMIN);
       return baseResponse.successResponse(data, "Login successful!");
     } catch (Exception e) {
@@ -68,8 +68,7 @@ public class LoginService {
           .username(dto.getUsername())
           .build();
       String token = jwtAuthUtils.generateToken(claims);
-      Cookie cookie = new Cookie("auth_token", token);
-      response.addCookie(cookie);
+      this.addAuthTokenInCookies(token);
       var data = Map.of("role", UserRoleConstant.FACULTY);
       return baseResponse.successResponse(data, "Login successful!");
     } catch (Exception e) {
@@ -89,8 +88,7 @@ public class LoginService {
           .username(dto.getUsername())
           .build();
       String token = jwtAuthUtils.generateToken(claims);
-      Cookie cookie = new Cookie("auth_token", token);
-      response.addCookie(cookie);
+      this.addAuthTokenInCookies(token);
       var data = Map.of("role", UserRoleConstant.STUDENT);
       return baseResponse.successResponse(data, "Login successful!");
     } catch (Exception e) {
@@ -98,4 +96,41 @@ public class LoginService {
       return baseResponse.errorResponse(e);
     }
   }
+
+  private void addAuthTokenInCookies(String token) {
+    Cookie cookie = new Cookie("auth_token", token);
+    cookie.setPath("/");
+    cookie.setMaxAge(60 * 60 * 12);                   // expiry - 12 hours
+    cookie.setHttpOnly(true);
+    response.addCookie(cookie);
+  }
+
+  public ResponseEntity<?> userLogout() {
+    try {
+      Cookie cookie = new Cookie("auth_token", null);
+      cookie.setPath("/");
+      cookie.setMaxAge(0);
+      response.addCookie(cookie);
+      return baseResponse.successResponse(true, "Logout successful!");
+    } catch (Exception e) {
+      return baseResponse.errorResponse(e);
+    }
+  }
+
+  public static String getAuthTokenFromCookies(HttpServletRequest request) {
+    try {
+      Cookie[] cookies = request.getCookies();
+      if (cookies != null) {
+        for (Cookie cookie : cookies) {
+          if (cookie.getName().equals("auth_token")) {
+            return cookie.getValue();
+          }
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
 }

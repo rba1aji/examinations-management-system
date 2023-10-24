@@ -68,7 +68,7 @@ public class JwtAuthUtils {
     }
   }
 
-  public JwtClaimsDto decodeToken(String token) throws AccessDeniedException {
+  public JwtClaimsDto decodeToken(String token) {
     Claims claims = Jwts.parser().setSigningKey(encodedSecret).parseClaimsJws(token).getBody();
     JwtClaimsDto claimsDto = JwtClaimsDto.builder()
         .role((String) claims.get("role"))

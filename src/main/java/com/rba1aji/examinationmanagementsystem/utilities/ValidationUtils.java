@@ -45,4 +45,8 @@ public class ValidationUtils {
   public static boolean isNotNullAndNotEmpty(Collection<?> batch) {
     return batch != null && !batch.isEmpty();
   }
+
+  public static boolean isNullOrEmpty(String token) {
+    return token == null || token.isEmpty();
+  }
 }
