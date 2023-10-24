@@ -22,6 +22,14 @@ public class BaseResponse {
     return new ResponseEntity<>(res, HttpStatus.OK);
   }
 
+  public ResponseEntity<ResponseDto> successResponse(Object data, String message) {
+    var res = new ResponseDto();
+    res.setStatus(true);
+    res.setData(data);
+    res.setMessage(message);
+    return new ResponseEntity<>(res, HttpStatus.OK);
+  }
+
   public ResponseEntity<ResponseDto> errorResponse(HttpStatus httpStatus, String message) {
     var res = new ResponseDto();
     res.setMessage(message);

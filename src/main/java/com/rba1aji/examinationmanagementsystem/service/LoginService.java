@@ -12,11 +12,14 @@ import com.rba1aji.examinationmanagementsystem.repository.StudentRepository;
 import com.rba1aji.examinationmanagementsystem.utilities.BaseResponse;
 import com.rba1aji.examinationmanagementsystem.utilities.EncryptionUtils;
 import com.rba1aji.examinationmanagementsystem.utilities.JwtAuthUtils;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,11 +28,12 @@ import java.util.Optional;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LoginService {
 
-  private final AdminRepository   adminRepository;
+  private final AdminRepository adminRepository;
   private final FacultyRepository facultyRepository;
   private final StudentRepository studentRepository;
-  private final JwtAuthUtils      jwtAuthUtils;
-  private final BaseResponse      baseResponse;
+  private final JwtAuthUtils jwtAuthUtils;
+  private final BaseResponse baseResponse;
+  private final HttpServletResponse response;
 
   public ResponseEntity<?> adminLogin(LoginRequestDto dto) {
     try {
@@ -41,13 +45,12 @@ public class LoginService {
       var claims = JwtClaimsDto.builder()
           .role(UserRoleConstant.ADMIN)
           .username(dto.getUsername())
-          .password(dto.getPassword())
           .build();
-      return baseResponse.successResponse(
-          Map.of(
-              "token", jwtAuthUtils.generateToken(claims)
-          )
-      );
+      String token = jwtAuthUtils.generateToken(claims);
+      Cookie cookie = new Cookie("auth_token", token);
+      response.addCookie(cookie);
+      var data = Map.of("role", UserRoleConstant.ADMIN);
+      return baseResponse.successResponse(data, "Login successful!");
     } catch (Exception e) {
       return baseResponse.errorResponse(e);
     }
@@ -63,13 +66,12 @@ public class LoginService {
       var claims = JwtClaimsDto.builder()
           .role(UserRoleConstant.FACULTY)
           .username(dto.getUsername())
-          .password(dto.getPassword())
           .build();
-      return baseResponse.successResponse(
-          Map.of(
-              "token", jwtAuthUtils.generateToken(claims)
-          )
-      );
+      String token = jwtAuthUtils.generateToken(claims);
+      Cookie cookie = new Cookie("auth_token", token);
+      response.addCookie(cookie);
+      var data = Map.of("role", UserRoleConstant.FACULTY);
+      return baseResponse.successResponse(data, "Login successful!");
     } catch (Exception e) {
       return baseResponse.errorResponse(e);
     }
@@ -85,13 +87,12 @@ public class LoginService {
       var claims = JwtClaimsDto.builder()
           .role(UserRoleConstant.STUDENT)
           .username(dto.getUsername())
-          .password(dto.getPassword())
           .build();
-      return baseResponse.successResponse(
-          Map.of(
-              "token", jwtAuthUtils.generateToken(claims)
-          )
-      );
+      String token = jwtAuthUtils.generateToken(claims);
+      Cookie cookie = new Cookie("auth_token", token);
+      response.addCookie(cookie);
+      var data = Map.of("role", UserRoleConstant.STUDENT);
+      return baseResponse.successResponse(data, "Login successful!");
     } catch (Exception e) {
       e.printStackTrace();
       return baseResponse.errorResponse(e);

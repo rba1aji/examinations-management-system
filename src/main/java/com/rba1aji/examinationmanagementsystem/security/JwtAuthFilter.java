@@ -2,12 +2,12 @@ package com.rba1aji.examinationmanagementsystem.security;
 
 import com.rba1aji.examinationmanagementsystem.dto.JwtClaimsDto;
 import com.rba1aji.examinationmanagementsystem.utilities.JwtAuthUtils;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       request.setAttribute("claims", claims);
       UserDetails user = new User(
           claims.getUsername(),
-          claims.getPassword(),
+          null,
           List.of(claims)
       );
       var authToken = new UsernamePasswordAuthenticationToken(
@@ -48,7 +48,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       );
       SecurityContextHolder.getContext().setAuthentication(authToken);
       filterChain.doFilter(request, response);
-    } catch (AccessDeniedException e) {
+    } catch (ExpiredJwtException e) {
       response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
     } catch (Exception e) {
       response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());

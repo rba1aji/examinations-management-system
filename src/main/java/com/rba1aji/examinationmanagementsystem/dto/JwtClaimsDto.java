@@ -9,7 +9,6 @@ import org.springframework.security.core.GrantedAuthority;
 public class JwtClaimsDto implements GrantedAuthority {
   private String role;
   private String username;
-  private String password;
 
   @Override
   public String getAuthority() {
