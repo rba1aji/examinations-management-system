@@ -23,7 +23,6 @@ import java.util.Date;
 public class Student {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @JsonIgnore
   private long id;
 
   @JsonIgnore
