@@ -48,7 +48,7 @@ public class AuthService {
           .username(dto.getUsername())
           .build();
       String token = jwtAuthUtils.generateToken(claims);
-      this.addAuthTokenInCookies(token);
+      addAuthTokenInCookies(response, token);
       var data = Map.of("role", UserRoleConstant.ADMIN);
       return baseResponse.successResponse(data, "Login successful!");
     } catch (Exception e) {
@@ -68,7 +68,7 @@ public class AuthService {
           .username(dto.getUsername())
           .build();
       String token = jwtAuthUtils.generateToken(claims);
-      this.addAuthTokenInCookies(token);
+      addAuthTokenInCookies(response, token);
       var data = Map.of("role", UserRoleConstant.FACULTY);
       return baseResponse.successResponse(data, "Login successful!");
     } catch (Exception e) {
@@ -88,7 +88,7 @@ public class AuthService {
           .username(dto.getUsername())
           .build();
       String token = jwtAuthUtils.generateToken(claims);
-      this.addAuthTokenInCookies(token);
+      addAuthTokenInCookies(response, token);
       var data = Map.of("role", UserRoleConstant.STUDENT);
       return baseResponse.successResponse(data, "Login successful!");
     } catch (Exception e) {
@@ -97,17 +97,17 @@ public class AuthService {
     }
   }
 
-  private void addAuthTokenInCookies(String token) {
-    Cookie cookie = new Cookie("auth_token", token);
+  private static void addAuthTokenInCookies(HttpServletResponse response, String token) {
+    Cookie cookie = new Cookie("authtoken", token);
     cookie.setPath("/");
     cookie.setMaxAge(60 * 60 * 12);                   // expiry - 12 hours
-    cookie.setHttpOnly(true);
+    cookie.setSecure(true);
     response.addCookie(cookie);
   }
 
   public ResponseEntity<?> userLogout() {
     try {
-      Cookie cookie = new Cookie("auth_token", null);
+      Cookie cookie = new Cookie("authtoken", null);
       cookie.setPath("/");
       cookie.setMaxAge(0);
       response.addCookie(cookie);
@@ -122,7 +122,7 @@ public class AuthService {
       Cookie[] cookies = request.getCookies();
       if (cookies != null) {
         for (Cookie cookie : cookies) {
-          if (cookie.getName().equals("auth_token")) {
+          if (cookie.getName().equals("authtoken")) {
             return cookie.getValue();
           }
         }

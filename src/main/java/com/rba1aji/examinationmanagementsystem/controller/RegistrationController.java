@@ -3,8 +3,7 @@ package com.rba1aji.examinationmanagementsystem.controller;
 import com.rba1aji.examinationmanagementsystem.dto.request.DegreeSaveDto;
 import com.rba1aji.examinationmanagementsystem.dto.request.DepartmentSaveDto;
 import com.rba1aji.examinationmanagementsystem.dto.request.SaveFacultyReqDto;
-import com.rba1aji.examinationmanagementsystem.model.Course;
-import com.rba1aji.examinationmanagementsystem.model.Faculty;
+import com.rba1aji.examinationmanagementsystem.dto.request.SaveUpdateCourseDto;
 import com.rba1aji.examinationmanagementsystem.security.UserRegistrationService;
 import com.rba1aji.examinationmanagementsystem.service.CourseService;
 import com.rba1aji.examinationmanagementsystem.service.DegreeService;
@@ -59,7 +58,7 @@ public class RegistrationController {
   }
 
   @PostMapping("/save-update-course")
-  public ResponseEntity<?> saveUpdateCourse(@Valid Course course) {
+  public ResponseEntity<?> saveUpdateCourse(@Valid @RequestBody SaveUpdateCourseDto course) {
     return courseService.saveUpdateCourse(course);
   }
 

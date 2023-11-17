@@ -61,7 +61,7 @@ public class UserRegistrationService {
   }
 
   public ResponseEntity<?> excelRegisterStudents(MultipartFile file) {
-    List<Object> responseList = new ArrayList<>();
+    List<RepoSaveResponseDto> responseList = new ArrayList<>();
     try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
       Sheet sheet = workbook.getSheetAt(0);
       sheet.removeRow(sheet.getRow(0));                                               // remove header row
@@ -79,7 +79,7 @@ public class UserRegistrationService {
               .phone(ExcelCellUtils.getString(row.getCell(6)))
               .password(EncryptionUtils.encrypt(ExcelCellUtils.getDateString(row.getCell(1))))
               .build();
-          student = this.saveStudent(student);
+          student = saveStudent(student);
           response.setStatus(true);
           response.setId(student.getRegisterNumber());
           response.setMessage("Success");
@@ -89,7 +89,11 @@ public class UserRegistrationService {
         }
         responseList.add(response);
       });
-      return baseResponse.successResponse(responseList);
+      long successCount = responseList.stream().filter(RepoSaveResponseDto::isStatus).count();
+      if (successCount == 0) {
+        return baseResponse.errorResponse(HttpStatus.EXPECTATION_FAILED, "Students registration failed!");
+      }
+      return baseResponse.successResponse(responseList, "Successfully registered " + successCount + " students!");
     } catch (Exception e) {
       log.info("Error in excelRegisterStudents(): ", e);
       return baseResponse.errorResponse(e);
@@ -124,7 +128,7 @@ public class UserRegistrationService {
         }
         responseList.add(response);
       });
-      return baseResponse.successResponse(responseList);
+      return baseResponse.successResponse(responseList, "Successfully registered faculties!");
     } catch (Exception e) {
       log.info("Error in excelRegisterStudents(): ", e);
       return baseResponse.errorResponse(e);

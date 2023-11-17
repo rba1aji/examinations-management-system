@@ -31,10 +31,10 @@ public class SecurityConfig {
         .cors(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(authorize -> {
           authorize
-              .requestMatchers("/auth/**").permitAll()
-              .requestMatchers("/registration/**").hasAnyAuthority(UserRoleConstant.ADMIN)
-              .requestMatchers("/department/**").authenticated()
-              .requestMatchers("/course/**").authenticated()
+//              .requestMatchers("/auth/**").permitAll()
+//              .requestMatchers("/registration/**").hasAnyAuthority(UserRoleConstant.ADMIN)
+//              .requestMatchers("/department/**").authenticated()
+//              .requestMatchers("/course/**").authenticated()
               .anyRequest().permitAll();
         })
         .exceptionHandling(

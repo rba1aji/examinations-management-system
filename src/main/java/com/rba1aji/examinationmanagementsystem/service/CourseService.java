@@ -1,21 +1,25 @@
 package com.rba1aji.examinationmanagementsystem.service;
 
 import com.rba1aji.examinationmanagementsystem.dto.RepoSaveResponseDto;
+import com.rba1aji.examinationmanagementsystem.dto.request.SaveUpdateCourseDto;
 import com.rba1aji.examinationmanagementsystem.model.Course;
 import com.rba1aji.examinationmanagementsystem.model.Department;
 import com.rba1aji.examinationmanagementsystem.repository.CourseRepository;
 import com.rba1aji.examinationmanagementsystem.utilities.BaseResponse;
 import com.rba1aji.examinationmanagementsystem.utilities.ExcelCellUtils;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -29,9 +33,12 @@ public class CourseService {
   private final CourseRepository courseRepository;
   private final BaseResponse baseResponse;
 
-  public ResponseEntity<?> saveUpdateCourse(Course course) {
+  public ResponseEntity<?> saveUpdateCourse(@Valid @RequestBody SaveUpdateCourseDto dto) {
     try {
-      return baseResponse.successResponse(courseRepository.saveAndFlush(course));
+      Course course = new Course();
+      course.setDepartment(Department.builder().code(dto.getDepartment()).build());
+      BeanUtils.copyProperties(dto, course);
+      return baseResponse.successResponse(courseRepository.saveAndFlush(course), "Successfully saved course!");
     } catch (Exception e) {
       return baseResponse.errorResponse(e);
     }
@@ -66,7 +73,7 @@ public class CourseService {
         }
         responseList.add(response);
       });
-      return baseResponse.successResponse(responseList);
+      return baseResponse.successResponse(responseList, "Successfully registered courses!");
     } catch (Exception e) {
       log.info("Error in excelRegisterStudents(): ", e);
       return baseResponse.errorResponse(e);

@@ -17,6 +17,7 @@ public class CrossOriginFilter implements Filter {
     httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS");
     httpResponse.setHeader("Access-Control-Allow-Headers", "*");
     httpResponse.setHeader("Access-Control-Max-Age", "3600");
+    httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
     chain.doFilter(request, httpResponse);
   }
 }
