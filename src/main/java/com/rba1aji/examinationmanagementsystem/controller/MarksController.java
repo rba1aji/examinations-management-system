@@ -30,8 +30,13 @@ public class MarksController {
   }
 
   @PostMapping("/add-update-marks-list")
-  private ResponseEntity<?> addUpdateMarksList(@RequestBody List<MarksAddUpdateDto> marksList) {
+  public ResponseEntity<?> addUpdateMarksList(@RequestBody List<MarksAddUpdateDto> marksList) {
     return marksService.addUpdateMarksList(marksList);
+  }
+
+  @GetMapping("/get-all-marks-for-exam-batch")
+  public ResponseEntity<?> getMarksForExamBatch(@RequestParam(name = "examBatchId")String examBatchId){
+    return marksService.getMarksForExamBatch(examBatchId);
   }
 
 }

@@ -16,6 +16,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,4 +69,13 @@ public class MarksService {
     }
   }
 
+  public ResponseEntity<?> getMarksForExamBatch(String examBatchId) {
+    List<Marks> marks = new ArrayList<>();
+    try {
+      marks = marksRepository.findAllByExamBatchIdOrderByStudentAsc(ValidationUtils.getLong(examBatchId));
+    } catch (Exception e) {
+      return baseResponse.errorResponse(e);
+    }
+    return baseResponse.successResponse(marks, "Marks for examBatch fetched successfully!");
+  }
 }

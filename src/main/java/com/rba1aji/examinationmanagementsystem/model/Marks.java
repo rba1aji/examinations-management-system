@@ -28,7 +28,7 @@ public class Marks {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
 
-  private char attendance;
+  private Character attendance;
 
   private int marks;
 
