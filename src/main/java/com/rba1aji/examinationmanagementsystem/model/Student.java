@@ -20,7 +20,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Data
 @Entity
-public class Student {
+public class Student extends User {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private int id;

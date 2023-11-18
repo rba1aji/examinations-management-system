@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 @Data
 @Builder
 public class JwtClaimsDto implements GrantedAuthority {
-  private Integer userId;
+  private int userId;
   private String role;
   private String username;
 

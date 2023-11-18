@@ -34,7 +34,7 @@ public class FacultyService {
 
   public ResponseEntity<?> getSessionFaculty() {
     try {
-      long id = (long) request.getAttribute("userId");
+      int id = (int) request.getAttribute("userId");
       return baseResponse.successResponse(
           facultyRepository.findById(id).orElse(null)
       );

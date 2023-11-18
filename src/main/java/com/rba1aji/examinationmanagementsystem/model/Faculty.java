@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Faculty {
+public class Faculty extends User {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private int id;

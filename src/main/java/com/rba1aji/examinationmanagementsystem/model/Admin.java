@@ -6,9 +6,11 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Admin {
+public class Admin extends User {
   @Id
-  private String id;
+  private int id;
+
+  private String username;
 
   private String password;
 

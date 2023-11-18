@@ -1,10 +1,12 @@
 package com.rba1aji.examinationmanagementsystem.controller;
 
+import com.rba1aji.examinationmanagementsystem.dto.request.ChangePasswordReqDto;
 import com.rba1aji.examinationmanagementsystem.dto.request.LoginRequestDto;
 import com.rba1aji.examinationmanagementsystem.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,6 +36,11 @@ public class AuthController {
   @PostMapping("/logout")
   public ResponseEntity<?> userLogout() {
     return authService.userLogout();
+  }
+
+  @PutMapping("/change-password")
+  public ResponseEntity<?> changePassword(@RequestBody ChangePasswordReqDto dto){
+    return authService.changeUserPassword(dto);
   }
 
 }

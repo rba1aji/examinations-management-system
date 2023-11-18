@@ -2,6 +2,7 @@ package com.rba1aji.examinationmanagementsystem.service;
 
 import com.rba1aji.examinationmanagementsystem.constant.UserRoleConstant;
 import com.rba1aji.examinationmanagementsystem.dto.JwtClaimsDto;
+import com.rba1aji.examinationmanagementsystem.dto.request.ChangePasswordReqDto;
 import com.rba1aji.examinationmanagementsystem.dto.request.LoginRequestDto;
 import com.rba1aji.examinationmanagementsystem.model.Admin;
 import com.rba1aji.examinationmanagementsystem.model.Faculty;
@@ -35,16 +36,18 @@ public class AuthService {
   private final JwtAuthUtils jwtAuthUtils;
   private final BaseResponse baseResponse;
   private final HttpServletResponse response;
+  private final HttpServletRequest request;
 
   public ResponseEntity<?> adminLogin(LoginRequestDto dto) {
     try {
-      Optional<Admin> admin = adminRepository.findById(dto.getUsername());
+      Optional<Admin> admin = adminRepository.findByUsername(dto.getUsername());
       if (admin.isEmpty())
         return baseResponse.errorResponse(HttpStatus.NOT_FOUND, "Invalid username!");
-      if (!EncryptionUtils.verify(dto.getPassword(), admin.get().getPassword()))
+      if (!EncryptionUtils.verifyPlainForHashed(dto.getPassword(), admin.get().getPassword()))
         return baseResponse.errorResponse(HttpStatus.UNAUTHORIZED, "Invalid password!");
       var claims = JwtClaimsDto.builder()
           .role(UserRoleConstant.ADMIN)
+          .userId(admin.get().getId())
           .username(dto.getUsername())
           .build();
       String token = jwtAuthUtils.generateToken(claims);
@@ -62,7 +65,7 @@ public class AuthService {
       Optional<Faculty> faculty = facultyRepository.findByUsername(dto.getUsername());
       if (faculty.isEmpty())
         return baseResponse.errorResponse(HttpStatus.NOT_FOUND, "Invalid username!");
-      if (!EncryptionUtils.verify(dto.getPassword(), faculty.get().getPassword()))
+      if (!EncryptionUtils.verifyPlainForHashed(dto.getPassword(), faculty.get().getPassword()))
         return baseResponse.errorResponse(HttpStatus.UNAUTHORIZED, "Invalid password!");
       var claims = JwtClaimsDto.builder()
           .role(UserRoleConstant.FACULTY)
@@ -84,7 +87,7 @@ public class AuthService {
       Optional<Student> student = studentRepository.findByRegisterNumber(dto.getUsername());
       if (student.isEmpty())
         return baseResponse.errorResponse(HttpStatus.NOT_FOUND, "Invalid username!");
-      if (!EncryptionUtils.verify(dto.getPassword(), student.get().getPassword()))
+      if (!EncryptionUtils.verifyPlainForHashed(dto.getPassword(), student.get().getPassword()))
         return baseResponse.errorResponse(HttpStatus.UNAUTHORIZED, "Invalid password!");
       var claims = JwtClaimsDto.builder()
           .role(UserRoleConstant.STUDENT)
@@ -138,4 +141,68 @@ public class AuthService {
     return null;
   }
 
+  public ResponseEntity<?> changeUserPassword(ChangePasswordReqDto dto) {
+    var claims = (JwtClaimsDto) request.getAttribute("claims");
+//    User user = switch (claims.getRole()) {
+//      case UserRoleConstant.ADMIN -> adminRepository.findById(claims.getUserId()).orElse(null);
+//      case UserRoleConstant.FACULTY -> facultyRepository.findById(claims.getUserId()).orElse(null);
+//      case UserRoleConstant.STUDENT -> studentRepository.findById(claims.getUserId()).orElse(null);
+//      default -> null;
+//    };
+    return switch (claims.getRole()) {
+      case UserRoleConstant.ADMIN -> changeAdminPassword(claims.getUserId(), dto);
+      case UserRoleConstant.FACULTY -> changeFacultyPassword(claims.getUserId(), dto);
+      case UserRoleConstant.STUDENT -> changeStudentPassword(claims.getUserId(), dto);
+      default -> baseResponse.errorResponse(HttpStatus.NOT_FOUND, "User role not found in token claims!");
+    };
+  }
+
+
+  private ResponseEntity<?> changeStudentPassword(int userId, ChangePasswordReqDto dto) {
+    Optional<Student> studentOp = studentRepository.findById(userId);
+    if (studentOp.isPresent()) {
+      Student student = studentOp.get();
+      if (EncryptionUtils.verifyPlainForHashed(dto.getCurrentPassword(), student.getPassword())) {
+        student.setPassword(EncryptionUtils.encrypt(dto.getNewPassword()));
+        studentRepository.saveAndFlush(student);
+        return baseResponse.successResponse("Password changed successfully!");
+      } else {
+        return baseResponse.errorResponse(HttpStatus.UNPROCESSABLE_ENTITY, "Invalid current password!");
+      }
+    } else {
+      return baseResponse.errorResponse(HttpStatus.UNPROCESSABLE_ENTITY, "Student user not found!");
+    }
+  }
+
+  private ResponseEntity<?> changeFacultyPassword(int userId, ChangePasswordReqDto dto) {
+    Optional<Faculty> facultyOp = facultyRepository.findById(userId);
+    if (facultyOp.isPresent()) {
+      Faculty faculty = facultyOp.get();
+      if (EncryptionUtils.verifyPlainForHashed(dto.getCurrentPassword(), faculty.getPassword())) {
+        faculty.setPassword(EncryptionUtils.encrypt(dto.getNewPassword()));
+        facultyRepository.saveAndFlush(faculty);
+        return baseResponse.successResponse("Password changed successfully!");
+      } else {
+        return baseResponse.errorResponse(HttpStatus.UNPROCESSABLE_ENTITY, "Invalid current password!");
+      }
+    } else {
+      return baseResponse.errorResponse(HttpStatus.UNPROCESSABLE_ENTITY, "Faculty user not found!");
+    }
+  }
+
+  private ResponseEntity<?> changeAdminPassword(int userId, ChangePasswordReqDto dto) {
+    Optional<Admin> adminOp = adminRepository.findById(userId);
+    if (adminOp.isPresent()) {
+      Admin admin = adminOp.get();
+      if (EncryptionUtils.verifyPlainForHashed(dto.getCurrentPassword(), admin.getPassword())) {
+        admin.setPassword(EncryptionUtils.encrypt(dto.getNewPassword()));
+        adminRepository.saveAndFlush(admin);
+        return baseResponse.successResponse("Password changed successfully!");
+      } else {
+        return baseResponse.errorResponse(HttpStatus.UNPROCESSABLE_ENTITY, "Invalid current password!");
+      }
+    } else {
+      return baseResponse.errorResponse(HttpStatus.UNPROCESSABLE_ENTITY, "Admin user not found!");
+    }
+  }
 }

@@ -9,7 +9,7 @@ public class EncryptionUtils {
     return BCrypt.hashpw(password, BCrypt.gensalt(10));
   }
 
-  public static boolean verify(String password, String hashed) {
+  public static boolean verifyPlainForHashed(String password, String hashed) {
     return BCrypt.checkpw(password, hashed);
   }
 

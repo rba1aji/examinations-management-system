@@ -1,11 +1,6 @@
 package com.rba1aji.examinationmanagementsystem.service;
 
-import com.rba1aji.examinationmanagementsystem.dto.request.MarksAddUpdateDto;
-import com.rba1aji.examinationmanagementsystem.model.Course;
-import com.rba1aji.examinationmanagementsystem.model.Exam;
-import com.rba1aji.examinationmanagementsystem.model.ExamBatch;
 import com.rba1aji.examinationmanagementsystem.model.Marks;
-import com.rba1aji.examinationmanagementsystem.model.Student;
 import com.rba1aji.examinationmanagementsystem.repository.MarksRepository;
 import com.rba1aji.examinationmanagementsystem.repository.specification.MarksSpecification;
 import com.rba1aji.examinationmanagementsystem.utilities.BaseResponse;
@@ -18,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -62,6 +57,7 @@ public class MarksService {
 //              .examBatch(ExamBatch.builder().id(dto.getExamBatchId()).build())
 //              .build()
 //      ).collect(Collectors.toList());
+      marksList.removeIf(Objects::isNull);
       marksRepository.saveAllAndFlush(marksList);
       return baseResponse.successResponse("Successfully saved marks list!");
     } catch (Exception e) {
