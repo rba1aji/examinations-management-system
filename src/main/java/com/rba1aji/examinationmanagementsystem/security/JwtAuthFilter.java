@@ -32,13 +32,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
     try {
-      final String token = AuthService.getAuthTokenFromCookies(request);
+      String token = AuthService.getAuthTokenFromCookies(request);
+      if (ValidationUtils.isNullOrEmpty(token)) {
+        token = request.getHeader("Authorization");
+        token = ValidationUtils.isNotNullAndNotEmpty(token) && token.contains("Bearer ") ? token.split("Bearer ")[1] : "";
+      }
       if (ValidationUtils.isNullOrEmpty(token)) {
         filterChain.doFilter(request, response);
         return;
       }
       JwtClaimsDto claims = jwtAuthUtils.decodeToken(token);
       request.setAttribute("claims", claims);
+      request.setAttribute("userId", claims.getUserId());
       UserDetails user = new User(
           claims.getUsername(),
           token,

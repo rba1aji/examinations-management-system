@@ -49,7 +49,8 @@ public class AuthService {
           .build();
       String token = jwtAuthUtils.generateToken(claims);
       addAuthTokenInCookies(response, token);
-      var data = Map.of("role", UserRoleConstant.ADMIN);
+      var data = Map.of("role", UserRoleConstant.ADMIN,
+          "token", token);
       return baseResponse.successResponse(data, "Login successful!");
     } catch (Exception e) {
       return baseResponse.errorResponse(e);
@@ -65,11 +66,13 @@ public class AuthService {
         return baseResponse.errorResponse(HttpStatus.UNAUTHORIZED, "Invalid password!");
       var claims = JwtClaimsDto.builder()
           .role(UserRoleConstant.FACULTY)
+          .userId(faculty.get().getId())
           .username(dto.getUsername())
           .build();
       String token = jwtAuthUtils.generateToken(claims);
       addAuthTokenInCookies(response, token);
-      var data = Map.of("role", UserRoleConstant.FACULTY);
+      var data = Map.of("role", UserRoleConstant.FACULTY,
+          "token", token);
       return baseResponse.successResponse(data, "Login successful!");
     } catch (Exception e) {
       return baseResponse.errorResponse(e);
@@ -85,11 +88,13 @@ public class AuthService {
         return baseResponse.errorResponse(HttpStatus.UNAUTHORIZED, "Invalid password!");
       var claims = JwtClaimsDto.builder()
           .role(UserRoleConstant.STUDENT)
+          .userId(student.get().getId())
           .username(dto.getUsername())
           .build();
       String token = jwtAuthUtils.generateToken(claims);
       addAuthTokenInCookies(response, token);
-      var data = Map.of("role", UserRoleConstant.STUDENT);
+      var data = Map.of("role", UserRoleConstant.STUDENT,
+          "token", token);
       return baseResponse.successResponse(data, "Login successful!");
     } catch (Exception e) {
       e.printStackTrace();

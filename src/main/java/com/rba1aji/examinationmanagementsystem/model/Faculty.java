@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 public class Faculty {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  private long id;
+  private int id;
 
   @Column(unique = true)
   private String username;

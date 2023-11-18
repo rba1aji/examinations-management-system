@@ -28,4 +28,8 @@ public class CommonUtils {
     }
     return null;
   }
+
+  public static int getInt(Object obj) {
+    return obj != null ? (Integer) obj : 0;
+  }
 }

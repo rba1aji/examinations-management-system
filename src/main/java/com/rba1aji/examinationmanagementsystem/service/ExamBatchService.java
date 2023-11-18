@@ -35,13 +35,13 @@ public class ExamBatchService {
           .students(dto.getStudents())
           .exam(Exam.builder().id(ValidationUtils.getLong(dto.getExamId())).build())
           .course(Course.builder().id(ValidationUtils.getInt(dto.getCourseId())).build())
-          .faculty(Faculty.builder().id(ValidationUtils.getLong(dto.getFacultyId())).build())
+          .faculty(Faculty.builder().id(ValidationUtils.getInt(dto.getFacultyId())).build())
           .startTime(dto.getStartTime())
           .endTime(dto.getEndTime())
           .venue(dto.getVenue())
           .active(true)
           .build();
-      return baseResponse.successResponse(examBatchRepository.saveAndFlush(examBatch));
+      return baseResponse.successResponse(examBatchRepository.saveAndFlush(examBatch), "Successfully updated ExamBatch!");
     } catch (Exception e) {
       return baseResponse.errorResponse(e);
     }

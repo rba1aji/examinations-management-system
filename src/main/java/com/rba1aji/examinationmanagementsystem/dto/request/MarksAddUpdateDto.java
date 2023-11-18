@@ -7,7 +7,7 @@ public class MarksAddUpdateDto {
   private long id;
   private char attendance;
   private int marks;
-  private long studentId;
+  private int studentId;
   private long examId;
   private int courseId;
   private long examBatchId;

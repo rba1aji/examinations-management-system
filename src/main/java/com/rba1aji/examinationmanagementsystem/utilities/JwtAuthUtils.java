@@ -2,7 +2,6 @@ package com.rba1aji.examinationmanagementsystem.utilities;
 
 import com.rba1aji.examinationmanagementsystem.dto.JwtClaimsDto;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.PostConstruct;
@@ -11,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.AccessDeniedException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -49,6 +47,7 @@ public class JwtAuthUtils {
   public String generateToken(JwtClaimsDto claimsDto) {
     Map<String, Object> claimsMap = new HashMap<>();
     claimsMap.put("role", claimsDto.getRole());
+    claimsMap.put("userId", claimsDto.getUserId());
     claimsMap.put("username", claimsDto.getUsername());
     long now = System.currentTimeMillis();
     return Jwts.builder()
@@ -72,6 +71,7 @@ public class JwtAuthUtils {
     Claims claims = Jwts.parser().setSigningKey(encodedSecret).parseClaimsJws(token).getBody();
     JwtClaimsDto claimsDto = JwtClaimsDto.builder()
         .role((String) claims.get("role"))
+        .userId((Integer) claims.get("userId"))
         .username((String) claims.get("username"))
         .build();
     return claimsDto;

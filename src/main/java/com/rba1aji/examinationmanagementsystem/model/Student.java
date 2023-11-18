@@ -23,7 +23,7 @@ import java.util.Date;
 public class Student {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  private long id;
+  private int id;
 
   @JsonIgnore
   private String password;

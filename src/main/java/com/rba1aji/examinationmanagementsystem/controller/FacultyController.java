@@ -20,4 +20,14 @@ public class FacultyController {
     return facultyService.getAllFaculties();
   }
 
+  @GetMapping("/get-profile")
+  public ResponseEntity<?> getFaculty() {
+    return facultyService.getSessionFaculty();
+  }
+
+  @GetMapping("/get-active-exam-batches")
+  public ResponseEntity<?> getActiveExamBatches() {
+    return facultyService.getActiveExamBatches();
+  }
+
 }
