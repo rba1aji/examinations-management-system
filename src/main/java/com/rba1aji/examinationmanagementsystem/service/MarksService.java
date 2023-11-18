@@ -49,19 +49,19 @@ public class MarksService {
     }
   }
 
-  public ResponseEntity<?> addUpdateMarksList(List<MarksAddUpdateDto> dtoList) {
+  public ResponseEntity<?> addUpdateMarksList(List<Marks> marksList) {
     try {
-      List<Marks> marksList = dtoList.stream().map(
-          dto -> Marks.builder()
-              .id(dto.getId())
-              .attendance(dto.getAttendance())
-              .marks(dto.getMarks())
-              .student(Student.builder().id(dto.getStudentId()).build())
-              .exam(Exam.builder().id(dto.getExamId()).build())
-              .course(Course.builder().id(dto.getCourseId()).build())
-              .examBatch(ExamBatch.builder().id(dto.getExamBatchId()).build())
-              .build()
-      ).collect(Collectors.toList());
+//      List<Marks> marksList = dtoList.stream().map(
+//          dto -> Marks.builder()
+//              .id(dto.getId())
+//              .attendance(dto.getAttendance())
+//              .marks(dto.getMarks())
+//              .student(Student.builder().id(dto.getStudentId()).build())
+//              .exam(Exam.builder().id(dto.getExamId()).build())
+//              .course(Course.builder().id(dto.getCourseId()).build())
+//              .examBatch(ExamBatch.builder().id(dto.getExamBatchId()).build())
+//              .build()
+//      ).collect(Collectors.toList());
       marksRepository.saveAllAndFlush(marksList);
       return baseResponse.successResponse("Successfully saved marks list!");
     } catch (Exception e) {

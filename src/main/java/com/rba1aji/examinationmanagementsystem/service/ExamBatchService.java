@@ -58,6 +58,7 @@ public class ExamBatchService {
         List<Marks> studentMarks = students.stream().map(student ->
                 Marks.builder()
                     .student(student)
+                    .attendance('-')
                     .examBatch(examBatch)
                     .exam(examBatch.getExam())
                     .course(examBatch.getCourse())
@@ -85,4 +86,12 @@ public class ExamBatchService {
     }
   }
 
+  public ResponseEntity<?> getExamBatchById(String examBatchId) {
+    try {
+      long id = ValidationUtils.getLong(examBatchId);
+      return baseResponse.successResponse(examBatchRepository.findById(id).orElse(null));
+    } catch (Exception e) {
+      return baseResponse.errorResponse(e);
+    }
+  }
 }

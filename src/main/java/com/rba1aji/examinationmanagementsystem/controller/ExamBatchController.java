@@ -32,4 +32,9 @@ public class ExamBatchController {
     return examBatchService.getAllExamBatchByOptionalParams(facultyId, examId, courseId);
   }
 
+  @GetMapping("/get-exam-batch")
+  public ResponseEntity<?> getExamBatch(@RequestParam("examBatchId") String examBatchId) {
+    return examBatchService.getExamBatchById(examBatchId);
+  }
+
 }
