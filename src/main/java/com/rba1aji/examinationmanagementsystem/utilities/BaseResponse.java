@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.AccessDeniedException;
+
 @Component
 public class BaseResponse {
   public ResponseEntity<ResponseDto> successResponse(Object data) {
@@ -39,6 +41,9 @@ public class BaseResponse {
   public ResponseEntity<ResponseDto> errorResponse(Exception e) {
     var res = new ResponseDto();
     res.setMessage(e.getMessage());
+    if (e instanceof AccessDeniedException) {
+      return new ResponseEntity<>(res, HttpStatus.FORBIDDEN);
+    }
     return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 

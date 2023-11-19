@@ -1,7 +1,8 @@
 package com.rba1aji.examinationmanagementsystem.controller;
 
-import com.rba1aji.examinationmanagementsystem.dto.request.MarksAddUpdateDto;
+import com.rba1aji.examinationmanagementsystem.constant.UserRole;
 import com.rba1aji.examinationmanagementsystem.model.Marks;
+import com.rba1aji.examinationmanagementsystem.security.AllowedRoles;
 import com.rba1aji.examinationmanagementsystem.service.MarksService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ public class MarksController {
   private final MarksService marksService;
 
   @GetMapping("/get-all-marks")
+  @AllowedRoles({UserRole.FACULTY, UserRole.ADMIN})
   public ResponseEntity<?> getAllMarks(@RequestParam(name = "examBatch", required = false) String examBatchId,
                                        @RequestParam(name = "student", required = false) String studentId,
                                        @RequestParam(name = "exam", required = false) String examId,
@@ -31,11 +33,13 @@ public class MarksController {
   }
 
   @PostMapping("/add-update-marks-list")
+  @AllowedRoles({UserRole.FACULTY, UserRole.ADMIN})
   public ResponseEntity<?> addUpdateMarksList(@RequestBody List<Marks> marksList) {
     return marksService.addUpdateMarksList(marksList);
   }
 
   @GetMapping("/get-all-marks-for-exam-batch")
+  @AllowedRoles({UserRole.FACULTY, UserRole.ADMIN})
   public ResponseEntity<?> getMarksForExamBatch(@RequestParam(name = "examBatchId") String examBatchId) {
     return marksService.getMarksForExamBatch(examBatchId);
   }

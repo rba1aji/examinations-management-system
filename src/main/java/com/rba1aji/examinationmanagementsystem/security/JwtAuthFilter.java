@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
@@ -32,18 +33,20 @@ public class JwtAuthFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
     try {
-      String token = AuthService.getAuthTokenFromCookies(request);
+//      String token = AuthService.getAuthTokenFromCookies(request)
+      String token = "";
       if (ValidationUtils.isNullOrEmpty(token)) {
         token = request.getHeader("Authorization");
         token = ValidationUtils.isNotNullAndNotEmpty(token) && token.contains("Bearer ") ? token.split("Bearer ")[1] : "";
       }
-      if (ValidationUtils.isNullOrEmpty(token)) {
+      if (ValidationUtils.isNullOrEmpty(token) || token.equals("undefined")) {
         filterChain.doFilter(request, response);
         return;
       }
       JwtClaimsDto claims = jwtAuthUtils.decodeToken(token);
       request.setAttribute("claims", claims);
       request.setAttribute("userId", claims.getUserId());
+      request.setAttribute("userRole", claims.getRole());
       UserDetails user = new User(
           claims.getUsername(),
           token,
@@ -60,8 +63,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Auth token expired!");
     } catch (JwtException e) {
       response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+    } catch (AccessDeniedException e) {
+      e.printStackTrace();
+      response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+    } catch (RuntimeException e) {
+      response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
     } catch (Exception e) {
-      response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+      e.printStackTrace();
+      response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
     }
   }
 }

@@ -46,7 +46,7 @@ public class FacultyService {
   public ResponseEntity<?> getActiveExamBatches() {
     try {
       int facultyId = CommonUtils.getInt(request.getAttribute("userId"));
-      List<ExamBatch> examBatchList = examBatchRepository.findAllByFacultyIdAndActive(facultyId, true);
+      List<ExamBatch> examBatchList = examBatchRepository.findAllByFacultyIdAndActiveOrderByStartTimeDesc(facultyId, true);
       return baseResponse.successResponse(examBatchList);
     } catch (Exception e) {
       return baseResponse.errorResponse(e);

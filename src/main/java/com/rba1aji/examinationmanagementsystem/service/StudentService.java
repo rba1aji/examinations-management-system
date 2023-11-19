@@ -5,6 +5,7 @@ import com.rba1aji.examinationmanagementsystem.model.Student;
 import com.rba1aji.examinationmanagementsystem.repository.StudentRepository;
 import com.rba1aji.examinationmanagementsystem.utilities.BaseResponse;
 import com.rba1aji.examinationmanagementsystem.utilities.ValidationUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ public class StudentService {
 
   private final StudentRepository studentRepository;
   private final BaseResponse baseResponse;
+  private final HttpServletRequest request;
 
   public ResponseEntity<?> getAllStudents() {
     try {
@@ -42,5 +44,16 @@ public class StudentService {
       );
     }
     return students;
+  }
+
+  public ResponseEntity<?> getSessionStudent() {
+    try {
+      int id = (int) request.getAttribute("userId");
+      return baseResponse.successResponse(
+          studentRepository.findById(id).orElse(null)
+      );
+    } catch (Exception e) {
+      return baseResponse.errorResponse(e);
+    }
   }
 }

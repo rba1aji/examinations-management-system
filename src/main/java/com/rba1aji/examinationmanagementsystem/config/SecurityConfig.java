@@ -1,9 +1,8 @@
 package com.rba1aji.examinationmanagementsystem.config;
 
-import com.rba1aji.examinationmanagementsystem.constant.UserRoleConstant;
 import com.rba1aji.examinationmanagementsystem.security.JwtAuthFilter;
 import com.rba1aji.examinationmanagementsystem.security.CrossOriginFilter;
-import com.rba1aji.examinationmanagementsystem.security.UnauthorizedEntryPoint;
+import com.rba1aji.examinationmanagementsystem.security.AuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +22,7 @@ public class SecurityConfig {
 
   private final JwtAuthFilter jwtAuthFilter;
   private final CrossOriginFilter crossOriginFilter;
-  private final UnauthorizedEntryPoint unauthorizedEntryPoint;
+  private final AuthenticationEntryPoint authenticationEntryPoint;
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,17 +30,22 @@ public class SecurityConfig {
         .cors(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(authorize -> {
           authorize
-//              .requestMatchers("/auth/**").permitAll()
-//              .requestMatchers("/registration/**").hasAnyAuthority(UserRoleConstant.ADMIN)
+              .requestMatchers("/auth/**").permitAll()
+//              .requestMatchers("/registration/**").authenticated()
+//              .requestMatchers("/faculty/**").authenticated()
+//              .requestMatchers("/student/**").authenticated()
 //              .requestMatchers("/department/**").authenticated()
 //              .requestMatchers("/course/**").authenticated()
-              .anyRequest().permitAll();
-        })
-        .exceptionHandling(
-            ex -> ex.authenticationEntryPoint(unauthorizedEntryPoint)
+//              .requestMatchers("/exam-batch/**").authenticated()
+//              .requestMatchers("/exam/**").authenticated()
+//              .requestMatchers("/marks/**").authenticated()
+              .anyRequest().authenticated();
+        }).exceptionHandling(ex -> ex
+            .authenticationEntryPoint(authenticationEntryPoint)
         );
-    http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
     http.addFilterBefore(crossOriginFilter, UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
     return http.build();
   }
 

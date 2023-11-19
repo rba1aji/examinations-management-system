@@ -1,5 +1,7 @@
 package com.rba1aji.examinationmanagementsystem.controller;
 
+import com.rba1aji.examinationmanagementsystem.constant.UserRole;
+import com.rba1aji.examinationmanagementsystem.security.AllowedRoles;
 import com.rba1aji.examinationmanagementsystem.service.FacultyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +18,19 @@ public class FacultyController {
   private final FacultyService facultyService;
 
   @GetMapping("/get-all-faculties")
+  @AllowedRoles(UserRole.ADMIN)
   public ResponseEntity<?> getAllFaculties() {
     return facultyService.getAllFaculties();
   }
 
   @GetMapping("/get-profile")
-  public ResponseEntity<?> getFaculty() {
+  @AllowedRoles(UserRole.FACULTY)
+  public ResponseEntity<?> getFacultyProfile() {
     return facultyService.getSessionFaculty();
   }
 
   @GetMapping("/get-active-exam-batches")
+  @AllowedRoles({UserRole.FACULTY})
   public ResponseEntity<?> getActiveExamBatches() {
     return facultyService.getActiveExamBatches();
   }

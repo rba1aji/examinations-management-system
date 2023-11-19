@@ -1,5 +1,7 @@
 package com.rba1aji.examinationmanagementsystem.controller;
 
+import com.rba1aji.examinationmanagementsystem.constant.UserRole;
+import com.rba1aji.examinationmanagementsystem.security.AllowedRoles;
 import com.rba1aji.examinationmanagementsystem.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +18,15 @@ public class StudentController {
   private final StudentService studentService;
 
   @GetMapping("/get-all-students")
+  @AllowedRoles({UserRole.ADMIN})
   public ResponseEntity<?> getAllStudents() {
     return studentService.getAllStudents();
+  }
+
+  @GetMapping("/get-profile")
+  @AllowedRoles(UserRole.STUDENT)
+  public ResponseEntity<?> getStudentProfile() {
+    return studentService.getSessionStudent();
   }
 
 }

@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface ExamBatchRepository extends JpaRepository<ExamBatch, Long>, JpaSpecificationExecutor<ExamBatch> {
-  List<ExamBatch> findAllByFacultyIdAndActive(long facultyId, boolean active);
+  List<ExamBatch> findAllByFacultyIdAndActiveOrderByStartTimeDesc(long facultyId, boolean active);
 }

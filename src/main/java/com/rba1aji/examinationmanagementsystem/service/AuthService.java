@@ -1,6 +1,6 @@
 package com.rba1aji.examinationmanagementsystem.service;
 
-import com.rba1aji.examinationmanagementsystem.constant.UserRoleConstant;
+import com.rba1aji.examinationmanagementsystem.constant.UserRole;
 import com.rba1aji.examinationmanagementsystem.dto.JwtClaimsDto;
 import com.rba1aji.examinationmanagementsystem.dto.request.ChangePasswordReqDto;
 import com.rba1aji.examinationmanagementsystem.dto.request.LoginRequestDto;
@@ -46,13 +46,13 @@ public class AuthService {
       if (!EncryptionUtils.verifyPlainForHashed(dto.getPassword(), admin.get().getPassword()))
         return baseResponse.errorResponse(HttpStatus.UNAUTHORIZED, "Invalid password!");
       var claims = JwtClaimsDto.builder()
-          .role(UserRoleConstant.ADMIN)
+          .role(UserRole.ADMIN)
           .userId(admin.get().getId())
           .username(dto.getUsername())
           .build();
       String token = jwtAuthUtils.generateToken(claims);
       addAuthTokenInCookies(response, token);
-      var data = Map.of("role", UserRoleConstant.ADMIN,
+      var data = Map.of("role", UserRole.ADMIN,
           "token", token);
       return baseResponse.successResponse(data, "Login successful!");
     } catch (Exception e) {
@@ -68,13 +68,13 @@ public class AuthService {
       if (!EncryptionUtils.verifyPlainForHashed(dto.getPassword(), faculty.get().getPassword()))
         return baseResponse.errorResponse(HttpStatus.UNAUTHORIZED, "Invalid password!");
       var claims = JwtClaimsDto.builder()
-          .role(UserRoleConstant.FACULTY)
+          .role(UserRole.FACULTY)
           .userId(faculty.get().getId())
           .username(dto.getUsername())
           .build();
       String token = jwtAuthUtils.generateToken(claims);
       addAuthTokenInCookies(response, token);
-      var data = Map.of("role", UserRoleConstant.FACULTY,
+      var data = Map.of("role", UserRole.FACULTY,
           "token", token);
       return baseResponse.successResponse(data, "Login successful!");
     } catch (Exception e) {
@@ -90,13 +90,13 @@ public class AuthService {
       if (!EncryptionUtils.verifyPlainForHashed(dto.getPassword(), student.get().getPassword()))
         return baseResponse.errorResponse(HttpStatus.UNAUTHORIZED, "Invalid password!");
       var claims = JwtClaimsDto.builder()
-          .role(UserRoleConstant.STUDENT)
+          .role(UserRole.STUDENT)
           .userId(student.get().getId())
           .username(dto.getUsername())
           .build();
       String token = jwtAuthUtils.generateToken(claims);
       addAuthTokenInCookies(response, token);
-      var data = Map.of("role", UserRoleConstant.STUDENT,
+      var data = Map.of("role", UserRole.STUDENT,
           "token", token);
       return baseResponse.successResponse(data, "Login successful!");
     } catch (Exception e) {
@@ -150,9 +150,9 @@ public class AuthService {
 //      default -> null;
 //    };
     return switch (claims.getRole()) {
-      case UserRoleConstant.ADMIN -> changeAdminPassword(claims.getUserId(), dto);
-      case UserRoleConstant.FACULTY -> changeFacultyPassword(claims.getUserId(), dto);
-      case UserRoleConstant.STUDENT -> changeStudentPassword(claims.getUserId(), dto);
+      case UserRole.ADMIN -> changeAdminPassword(claims.getUserId(), dto);
+      case UserRole.FACULTY -> changeFacultyPassword(claims.getUserId(), dto);
+      case UserRole.STUDENT -> changeStudentPassword(claims.getUserId(), dto);
       default -> baseResponse.errorResponse(HttpStatus.NOT_FOUND, "User role not found in token claims!");
     };
   }

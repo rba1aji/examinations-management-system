@@ -1,6 +1,8 @@
 package com.rba1aji.examinationmanagementsystem.controller;
 
+import com.rba1aji.examinationmanagementsystem.constant.UserRole;
 import com.rba1aji.examinationmanagementsystem.dto.request.AddUpdateExamReqDto;
+import com.rba1aji.examinationmanagementsystem.security.AllowedRoles;
 import com.rba1aji.examinationmanagementsystem.service.ExamService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +23,13 @@ public class ExamController {
   private final ExamService examService;
 
   @PostMapping("/add-update-exam")
+  @AllowedRoles(UserRole.ADMIN)
   public ResponseEntity<?> addUpdateExam(@Valid @RequestBody AddUpdateExamReqDto dto) {
     return examService.saveUpdateExam(dto);
   }
 
   @GetMapping("/get-all-exam")
+  @AllowedRoles(UserRole.ADMIN)
   public ResponseEntity<?> getAllExam(
       @RequestParam(name = "batch") String batch,
       @RequestParam(name = "semester", required = false) String semester
@@ -34,11 +38,13 @@ public class ExamController {
   }
 
   @GetMapping("/get-exam")
+  @AllowedRoles({UserRole.ADMIN, UserRole.FACULTY})
   public ResponseEntity<?> getExam(@RequestParam(name = "examId") String id) {
     return examService.getExamById(id);
   }
 
   @GetMapping("/get-departments-for-exam")
+  @AllowedRoles({UserRole.ADMIN, UserRole.FACULTY})
   public ResponseEntity<?> getDepartmentsForExam(@RequestParam("examId") String examId) {
     return examService.getDepartmentsForExam(examId);
   }

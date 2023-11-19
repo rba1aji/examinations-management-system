@@ -1,9 +1,11 @@
 package com.rba1aji.examinationmanagementsystem.controller;
 
+import com.rba1aji.examinationmanagementsystem.constant.UserRole;
 import com.rba1aji.examinationmanagementsystem.dto.request.DegreeSaveDto;
 import com.rba1aji.examinationmanagementsystem.dto.request.DepartmentSaveDto;
 import com.rba1aji.examinationmanagementsystem.dto.request.SaveFacultyReqDto;
 import com.rba1aji.examinationmanagementsystem.dto.request.SaveUpdateCourseDto;
+import com.rba1aji.examinationmanagementsystem.security.AllowedRoles;
 import com.rba1aji.examinationmanagementsystem.security.UserRegistrationService;
 import com.rba1aji.examinationmanagementsystem.service.CourseService;
 import com.rba1aji.examinationmanagementsystem.service.DegreeService;
@@ -33,36 +35,43 @@ public class RegistrationController {
   private final CourseService courseService;
 
   @PostMapping("/register-faculty")
+  @AllowedRoles(UserRole.ADMIN)
   public ResponseEntity<?> registerFaculty(@Valid @RequestBody SaveFacultyReqDto faculty) {
     return userRegistrationService.registerSingleFaculty(faculty);
   }
 
   @PostMapping("/excel-register-students")
+  @AllowedRoles(UserRole.ADMIN)
   public ResponseEntity<?> excelRegisterStudents(@RequestPart("file") MultipartFile file) {
     return userRegistrationService.excelRegisterStudents(file);
   }
 
   @PostMapping("/excel-register-faculties")
+  @AllowedRoles(UserRole.ADMIN)
   public ResponseEntity<?> excelRegisterFaculties(@RequestPart("file") MultipartFile file) {
     return userRegistrationService.excelRegisterFaculties(file);
   }
 
   @PostMapping("/save-update-department-list")
+  @AllowedRoles(UserRole.ADMIN)
   public ResponseEntity<?> saveUpdateDepartmentList(@Valid @RequestBody List<DepartmentSaveDto> departmentList) {
     return departmentService.saveUpdateDepartmentList(departmentList);
   }
 
   @PostMapping("/save-update-degree-list")
+  @AllowedRoles(UserRole.ADMIN)
   public ResponseEntity<?> saveUpdateDegreeList(@Valid @RequestBody List<DegreeSaveDto> departmentList) {
     return degreeService.saveUpdateDegreeList(departmentList);
   }
 
   @PostMapping("/save-update-course")
+  @AllowedRoles(UserRole.ADMIN)
   public ResponseEntity<?> saveUpdateCourse(@Valid @RequestBody SaveUpdateCourseDto course) {
     return courseService.saveUpdateCourse(course);
   }
 
   @PostMapping("/excel-register-courses")
+  @AllowedRoles(UserRole.ADMIN)
   public ResponseEntity<?> excelRegisterCourses(@RequestPart("file") MultipartFile file) {
     return courseService.excelRegisterCourses(file);
   }
