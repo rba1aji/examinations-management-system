@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.rba1aji.examinationmanagementsystem.service.StudentServiceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-11-19T12:57:36" hostname="BALAJI" time="0.228">
+  <properties/>
+  <testcase name="getStudentsForRegisterNumbersRange()" classname="com.rba1aji.examinationmanagementsystem.service.StudentServiceTest" time="0.228"/>
+  <system-out><![CDATA[2023-11-19T18:27:36.580+05:30  INFO 284 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.rba1aji.examinationmanagementsystem.service.StudentServiceTest]: StudentServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2023-11-19T18:27:36.603+05:30  INFO 284 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.rba1aji.examinationmanagementsystem.ExaminationManagementSystemApplication for test class com.rba1aji.examinationmanagementsystem.service.StudentServiceTest
+Hibernate: select s1_0.id,s1_0.batch,s1_0.date_of_birth,s1_0.department_code,s1_0.full_name,s1_0.password,s1_0.phone,s1_0.register_number,s1_0.section from student s1_0 where s1_0.register_number between ? and ?
+Hibernate: select d1_0.code,d2_0.code,d2_0.name,d1_0.name from department d1_0 left join degree d2_0 on d2_0.code=d1_0.degree_code where d1_0.code=?
+Hibernate: select d1_0.code,d2_0.code,d2_0.name,d1_0.name from department d1_0 left join degree d2_0 on d2_0.code=d1_0.degree_code where d1_0.code=?
+Hibernate: select d1_0.code,d2_0.code,d2_0.name,d1_0.name from department d1_0 left join degree d2_0 on d2_0.code=d1_0.degree_code where d1_0.code=?
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
