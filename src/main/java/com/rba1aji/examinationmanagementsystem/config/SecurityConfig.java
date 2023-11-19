@@ -1,5 +1,6 @@
 package com.rba1aji.examinationmanagementsystem.config;
 
+import com.rba1aji.examinationmanagementsystem.security.AccessDeniedEntryPoint;
 import com.rba1aji.examinationmanagementsystem.security.JwtAuthFilter;
 import com.rba1aji.examinationmanagementsystem.security.CrossOriginFilter;
 import com.rba1aji.examinationmanagementsystem.security.AuthenticationEntryPoint;
@@ -23,6 +24,7 @@ public class SecurityConfig {
   private final JwtAuthFilter jwtAuthFilter;
   private final CrossOriginFilter crossOriginFilter;
   private final AuthenticationEntryPoint authenticationEntryPoint;
+  private final AccessDeniedEntryPoint accessDeniedEntryPoint;
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -41,6 +43,7 @@ public class SecurityConfig {
 //              .requestMatchers("/marks/**").authenticated()
               .anyRequest().authenticated();
         }).exceptionHandling(ex -> ex
+            .accessDeniedHandler(accessDeniedEntryPoint)
             .authenticationEntryPoint(authenticationEntryPoint)
         );
     http.addFilterBefore(crossOriginFilter, UsernamePasswordAuthenticationFilter.class);
