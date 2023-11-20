@@ -1,5 +1,6 @@
 package com.rba1aji.examinationmanagementsystem.service;
 
+import com.rba1aji.examinationmanagementsystem.dto.ExamMarksReportReqDto;
 import com.rba1aji.examinationmanagementsystem.model.Marks;
 import com.rba1aji.examinationmanagementsystem.repository.MarksRepository;
 import com.rba1aji.examinationmanagementsystem.repository.specification.MarksSpecification;
@@ -74,4 +75,15 @@ public class MarksService {
     }
     return baseResponse.successResponse(marks, "Marks for examBatch fetched successfully!");
   }
+
+  public List<Marks> getAllMarksForExamMarksReport(ExamMarksReportReqDto reqDto) {
+    List<Marks> marks = new ArrayList<>();
+    try {
+      marks = marksRepository.findAll(marksSpecification.findAllMarksByExamMarksReportFilters(reqDto));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return marks;
+  }
+
 }

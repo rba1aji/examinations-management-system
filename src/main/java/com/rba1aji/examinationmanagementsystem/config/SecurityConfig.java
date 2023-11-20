@@ -33,15 +33,16 @@ public class SecurityConfig {
         .authorizeHttpRequests(authorize -> {
           authorize
               .requestMatchers("/auth/**").permitAll()
-//              .requestMatchers("/registration/**").authenticated()
-//              .requestMatchers("/faculty/**").authenticated()
-//              .requestMatchers("/student/**").authenticated()
-//              .requestMatchers("/department/**").authenticated()
-//              .requestMatchers("/course/**").authenticated()
-//              .requestMatchers("/exam-batch/**").authenticated()
-//              .requestMatchers("/exam/**").authenticated()
-//              .requestMatchers("/marks/**").authenticated()
-              .anyRequest().authenticated();
+              .requestMatchers("/registration/**").authenticated()
+              .requestMatchers("/faculty/**").authenticated()
+              .requestMatchers("/student/**").authenticated()
+              .requestMatchers("/department/**").authenticated()
+              .requestMatchers("/course/**").authenticated()
+              .requestMatchers("/exam-batch/**").authenticated()
+              .requestMatchers("/exam/**").authenticated()
+              .requestMatchers("/marks/**").authenticated()
+              .requestMatchers("/report/**").authenticated()
+              .anyRequest().permitAll();
         }).exceptionHandling(ex -> ex
             .accessDeniedHandler(accessDeniedEntryPoint)
             .authenticationEntryPoint(authenticationEntryPoint)

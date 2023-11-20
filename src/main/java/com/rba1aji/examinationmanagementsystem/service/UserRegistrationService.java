@@ -1,4 +1,4 @@
-package com.rba1aji.examinationmanagementsystem.security;
+package com.rba1aji.examinationmanagementsystem.service;
 
 import com.rba1aji.examinationmanagementsystem.dto.RepoSaveResponseDto;
 import com.rba1aji.examinationmanagementsystem.dto.request.SaveFacultyReqDto;
@@ -61,15 +61,14 @@ public class UserRegistrationService {
   }
 
   public ResponseEntity<?> excelRegisterStudents(MultipartFile file) {
-    List<RepoSaveResponseDto> responseList = new ArrayList<>();
+    List<RepoSaveResponseDto> errorList = new ArrayList<>();
+    List<Student> studentList = new ArrayList<>();
     try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
       Sheet sheet = workbook.getSheetAt(0);
       sheet.removeRow(sheet.getRow(0));                                               // remove header row
       sheet.forEach(row -> {
-        var response = new RepoSaveResponseDto();
-        Student student = null;
         try {
-          student = Student.builder()
+          Student student = Student.builder()
               .registerNumber(ExcelCellUtils.getString(row.getCell(0)))
               .dateOfBirth(ExcelCellUtils.getDate(row.getCell(1)))
               .fullName(ExcelCellUtils.getString(row.getCell(2)))
@@ -79,21 +78,17 @@ public class UserRegistrationService {
               .phone(ExcelCellUtils.getString(row.getCell(6)))
               .password(EncryptionUtils.encrypt(ExcelCellUtils.getDateString(row.getCell(1))))
               .build();
-          student = saveStudent(student);
-          response.setStatus(true);
-          response.setId(student.getRegisterNumber());
-          response.setMessage("Success");
+          studentList.add(student);
         } catch (Exception e) {
-          response.setId(student != null ? student.getRegisterNumber() : null);
-          response.setMessage(e.getMessage());
+          var error = new RepoSaveResponseDto();
+          error.setMessage(e.getMessage());
+          errorList.add(error);
         }
-        responseList.add(response);
       });
-      long successCount = responseList.stream().filter(RepoSaveResponseDto::isStatus).count();
-      if (successCount == 0) {
-        return baseResponse.errorResponse(HttpStatus.EXPECTATION_FAILED, "Students registration failed!");
-      }
-      return baseResponse.successResponse(responseList, "Successfully registered " + successCount + " students!");
+      studentRepository.saveAllAndFlush(studentList);
+      return baseResponse.successResponse(
+          errorList,
+          "Successfully registered students with " + errorList.size() + " failure!");
     } catch (Exception e) {
       log.info("Error in excelRegisterStudents(): ", e);
       return baseResponse.errorResponse(e);
@@ -101,15 +96,15 @@ public class UserRegistrationService {
   }
 
   public ResponseEntity<?> excelRegisterFaculties(MultipartFile file) {
-    List<Object> responseList = new ArrayList<>();
+    List<Object> errorList = new ArrayList<>();
+    List<Faculty> facultyList = new ArrayList<>();
     try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
       Sheet sheet = workbook.getSheetAt(0);
       sheet.removeRow(sheet.getRow(0));                                               // remove header row
       sheet.forEach(row -> {
-        var response = new RepoSaveResponseDto();
-        Faculty faculty = null;
+        var error = new RepoSaveResponseDto();
         try {
-          faculty = Faculty.builder()
+          Faculty faculty = Faculty.builder()
               .username(ExcelCellUtils.getString(row.getCell(0)))
               .password(EncryptionUtils.encrypt(ExcelCellUtils.getString(row.getCell(1))))
               .fullName(ExcelCellUtils.getString(row.getCell(2)))
@@ -118,17 +113,16 @@ public class UserRegistrationService {
               .phone(ExcelCellUtils.getString(row.getCell(5)))
               .email(ExcelCellUtils.getString(row.getCell(6)))
               .build();
-          faculty = this.saveFaculty(faculty);
-          response.setStatus(true);
-          response.setId(faculty.getUsername());
-          response.setMessage("Success");
+          facultyList.add(faculty);
         } catch (Exception e) {
-          response.setId(faculty != null ? faculty.getUsername() : null);
-          response.setMessage(e.getMessage());
+          error.setMessage(e.getMessage());
+          errorList.add(error);
         }
-        responseList.add(response);
       });
-      return baseResponse.successResponse(responseList, "Successfully registered faculties!");
+      facultyRepository.saveAllAndFlush(facultyList);
+      return baseResponse.successResponse(errorList,
+          "Successfully registered faculties with " + errorList.size() + " failure!"
+      );
     } catch (Exception e) {
       log.info("Error in excelRegisterStudents(): ", e);
       return baseResponse.errorResponse(e);
