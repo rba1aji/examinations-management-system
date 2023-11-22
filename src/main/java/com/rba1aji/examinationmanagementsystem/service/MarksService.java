@@ -1,7 +1,9 @@
 package com.rba1aji.examinationmanagementsystem.service;
 
 import com.rba1aji.examinationmanagementsystem.dto.ExamMarksReportReqDto;
+import com.rba1aji.examinationmanagementsystem.model.ExamBatch;
 import com.rba1aji.examinationmanagementsystem.model.Marks;
+import com.rba1aji.examinationmanagementsystem.repository.ExamBatchRepository;
 import com.rba1aji.examinationmanagementsystem.repository.MarksRepository;
 import com.rba1aji.examinationmanagementsystem.repository.specification.MarksSpecification;
 import com.rba1aji.examinationmanagementsystem.utilities.BaseResponse;
@@ -9,6 +11,7 @@ import com.rba1aji.examinationmanagementsystem.utilities.ValidationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,7 @@ public class MarksService {
   private final MarksRepository marksRepository;
   private final BaseResponse baseResponse;
   private final MarksSpecification marksSpecification;
+  private final ExamBatchRepository examBatchRepository;
 
   public ResponseEntity<?> getAllMarksByOptionalParams(String examBatchId, String studentId, String examId, String courseId) {
     try {
@@ -84,6 +88,21 @@ public class MarksService {
       e.printStackTrace();
     }
     return marks;
+  }
+
+  public ResponseEntity<?> addUpdateMarksListForExamBatch(List<Marks> marksList, String examBatchId) {
+    try {
+      ExamBatch examBatch = examBatchRepository.findById(ValidationUtils.getLong(examBatchId)).orElse(null);
+      if (examBatch == null) {
+        return baseResponse.errorResponse(HttpStatus.NOT_FOUND, "Exam batch not found!");
+      }
+      if (examBatch.isMarksSubmitted()) {
+        return baseResponse.errorResponse(HttpStatus.NOT_ACCEPTABLE, "Marks entry already submitted!");
+      }
+      return addUpdateMarksList(marksList);
+    } catch (Exception e) {
+      return baseResponse.errorResponse(e);
+    }
   }
 
 }
