@@ -33,5 +33,7 @@ public class AddUpdateExamBatchReqDto {
   @NotNull
   private Timestamp endTime;
 
+  private boolean enableMarksEntryByAdmin;
+
   private String venue;
 }

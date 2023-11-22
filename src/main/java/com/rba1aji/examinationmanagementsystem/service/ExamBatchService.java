@@ -48,23 +48,29 @@ public class ExamBatchService {
           .startTime(dto.getStartTime())
           .endTime(dto.getEndTime())
           .venue(dto.getVenue())
+          .marksSubmitted(!dto.isEnableMarksEntryByAdmin())
           .active(true)
           .build();
       if (examBatchRepository.existsById(examBatchId)) {
         examBatchRepository.saveAndFlush(examBatch);
       } else {
         examBatchRepository.saveAndFlush(examBatch);
-        List<Student> students = studentService.getStudentsForRegisterNumbersRange(dto.getStudents());
-        List<Marks> studentMarks = students.stream().map(student ->
-                Marks.builder()
-                    .student(student)
-                    .attendance('-')
-                    .examBatch(examBatch)
-                    .exam(examBatch.getExam())
-                    .course(examBatch.getCourse())
-                    .build())
-            .toList();
-        marksRepository.saveAllAndFlush(studentMarks);
+        try {
+          List<Student> students = studentService.getStudentsForRegisterNumbersRange(dto.getStudents());
+          List<Marks> studentMarks = students.stream().map(student ->
+                  Marks.builder()
+                      .student(student)
+                      .attendance('-')
+                      .examBatch(examBatch)
+                      .exam(examBatch.getExam())
+                      .course(examBatch.getCourse())
+                      .build())
+              .toList();
+          marksRepository.saveAllAndFlush(studentMarks);
+        } catch (Exception e) {
+          examBatchRepository.delete(examBatch);
+          e.printStackTrace();
+        }
       }
       return baseResponse.successResponse(examBatch, "Successfully updated ExamBatch!");
     } catch (Exception e) {
@@ -94,4 +100,21 @@ public class ExamBatchService {
       return baseResponse.errorResponse(e);
     }
   }
+
+  public ResponseEntity<?> submitMarksEntryByFaculty(String examBatchIdStr) {
+    try {
+      long examBatchId = ValidationUtils.getLong(examBatchIdStr);
+      ExamBatch examBatch = examBatchRepository.findById(examBatchId).orElse(null);
+      if (examBatch != null) {
+        examBatch.setMarksSubmitted(true);
+        examBatchRepository.saveAndFlush(examBatch);
+        return baseResponse.successResponse(examBatch, "Marks entry submitted successfully!");
+      } else {
+        return baseResponse.errorResponse(HttpStatus.NOT_FOUND, "ExamBatch Not found!");
+      }
+    } catch (Exception e) {
+      return baseResponse.errorResponse(e);
+    }
+  }
+
 }

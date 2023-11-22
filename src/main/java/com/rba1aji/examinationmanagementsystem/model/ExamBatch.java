@@ -51,6 +51,8 @@ public class ExamBatch {
 
   private String venue;
 
+  private boolean marksSubmitted;
+
   @JsonIgnore
   private boolean active = true;
 }

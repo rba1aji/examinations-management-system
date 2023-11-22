@@ -42,4 +42,10 @@ public class ExamBatchController {
     return examBatchService.getExamBatchById(examBatchId);
   }
 
+  @PostMapping("/submit-marks-entry-by-faculty")
+  @AllowedRoles(UserRole.FACULTY)
+  public ResponseEntity<?> submitMarkEntriesByFaculty(@RequestParam("examBatchId") String examBatchId) {
+    return examBatchService.submitMarksEntryByFaculty(examBatchId);
+  }
+
 }
