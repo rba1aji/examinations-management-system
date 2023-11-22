@@ -51,7 +51,9 @@ public class ExamBatch {
 
   private String venue;
 
-  private boolean marksSubmitted;
+  private boolean disableMarksEntry;
+
+  private boolean disableAttendanceEntry;
 
   @JsonIgnore
   private boolean active = true;

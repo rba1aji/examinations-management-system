@@ -48,7 +48,8 @@ public class ExamBatchService {
           .startTime(dto.getStartTime())
           .endTime(dto.getEndTime())
           .venue(dto.getVenue())
-          .marksSubmitted(!dto.isEnableMarksEntryByAdmin())
+          .disableAttendanceEntry(dto.isDisableAttendanceEntry())
+          .disableMarksEntry(dto.isDisableMarksEntry())
           .active(true)
           .build();
       if (examBatchRepository.existsById(examBatchId)) {
@@ -106,7 +107,8 @@ public class ExamBatchService {
       long examBatchId = ValidationUtils.getLong(examBatchIdStr);
       ExamBatch examBatch = examBatchRepository.findById(examBatchId).orElse(null);
       if (examBatch != null) {
-        examBatch.setMarksSubmitted(true);
+        examBatch.setDisableAttendanceEntry(true);
+        examBatch.setDisableMarksEntry(true);
         examBatchRepository.saveAndFlush(examBatch);
         return baseResponse.successResponse(examBatch, "Marks entry submitted successfully!");
       } else {

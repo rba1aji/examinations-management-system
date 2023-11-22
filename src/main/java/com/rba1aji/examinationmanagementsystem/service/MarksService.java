@@ -96,8 +96,8 @@ public class MarksService {
       if (examBatch == null) {
         return baseResponse.errorResponse(HttpStatus.NOT_FOUND, "Exam batch not found!");
       }
-      if (examBatch.isMarksSubmitted()) {
-        return baseResponse.errorResponse(HttpStatus.NOT_ACCEPTABLE, "Marks entry already submitted!");
+      if (examBatch.isDisableMarksEntry()) {
+        return baseResponse.errorResponse(HttpStatus.NOT_ACCEPTABLE, "Marks entry disabled!");
       }
       return addUpdateMarksList(marksList);
     } catch (Exception e) {
