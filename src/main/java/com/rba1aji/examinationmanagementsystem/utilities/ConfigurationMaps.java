@@ -10,6 +10,7 @@ public class ConfigurationMaps {
       'P', "Present",
       'A', "Absent",
       'O', "On Duty",
+      'W', "Withdraw",
       '-', "Not Entered"
   );
 
