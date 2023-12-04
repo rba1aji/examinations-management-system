@@ -1,4 +1,3 @@
-RUN chmod +x /app/gradlew
 # Use the official Gradle image as a build stage
 FROM gradle:7.3-jdk17 AS build
 MAINTAINER balaji
@@ -10,6 +9,8 @@ WORKDIR /home/gradle/src
 # Set environment variables for Gradle build
 ENV DB_URL=$DB_URL
 ENV DB_PWD=$DB_PWD
+
+RUN chmod +x ./gradlew
 
 RUN ./gradlew build --no-daemon
 
