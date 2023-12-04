@@ -1,3 +1,4 @@
+RUN chmod +x /app/gradlew
 # Use the official Gradle image as a build stage
 FROM gradle:7.3-jdk17 AS build
 MAINTAINER balaji
