@@ -1,8 +1,15 @@
 # Use the official Gradle image as a build stage
 FROM gradle:7.3-jdk17 AS build
 MAINTAINER balaji
+ARG DB_URL
+ARG DB_PWD
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
+
+# Set environment variables for Gradle build
+ENV DB_URL=$DB_URL
+ENV DB_PWD=$DB_PWD
+
 RUN ./gradlew build --no-daemon
 
 # Use a slim version of OpenJDK 17 as the final image
