@@ -10,5 +10,5 @@ public class CreateEvaluationReqDto {
   private int facultyId;
   private long startPaperNumber;
   private long endPaperNumber;
-  private JSONObject configuration;
+  private String configuration;
 }

@@ -43,11 +43,12 @@ public class EvaluationService {
         .faculty(Faculty.builder().id(reqDto.getFacultyId()).build())
         .startPaperNumber(reqDto.getStartPaperNumber())
         .endPaperNumber(reqDto.getEndPaperNumber())
-        .configuration(reqDto.getConfiguration().toString())
+        .configuration(reqDto.getConfiguration())
         .active(true)
         .build();
       evaluationRepository.saveAndFlush(evaluation);
       List<EvaluationPaper> evaluationPaperList = new ArrayList<>();
+      List<EvaluationBundle> evaluationBundleList = new ArrayList<>();
       for (long number = reqDto.getStartPaperNumber(); number <= reqDto.getEndPaperNumber(); number++) {
         evaluationPaperList.add(
           EvaluationPaper.builder()
@@ -55,7 +56,7 @@ public class EvaluationService {
             .build()
         );
         if (evaluationPaperList.size() == 25) {
-          evaluationBundleRepository.saveAndFlush(
+          evaluationBundleList.add(
             EvaluationBundle.builder()
               .evaluation(evaluation)
               .evaluationPaperList(evaluationPaperList)
@@ -64,6 +65,7 @@ public class EvaluationService {
           evaluationPaperList = new ArrayList<>();
         }
       }
+      evaluationBundleRepository.saveAll(evaluationBundleList);
       return baseResponse.successResponse(evaluation, "Successfully created evaluation!");
     } catch (Exception e) {
       e.printStackTrace();
