@@ -1,60 +1,50 @@
 package com.rba1aji.examinationmanagementsystem.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
-import java.util.Set;
-
-@Data
+/**
+ * Course wise evaluation.
+ *
+ * @author rba1aji
+ */
 @Entity
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExamBatch {
+public class Evaluation {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  private long id;
+  private int id;
 
-  private String name;
-
-  @ManyToMany(cascade = CascadeType.ALL)
-  private Set<BatchStudent> students;
+  private String description;
 
   @ManyToOne
-  @JoinColumn
   private Exam exam;
 
   @ManyToOne
-  @JoinColumn
   private Course course;
 
   @ManyToOne
-  @JoinColumn
   private Faculty faculty;
 
-  private Timestamp startTime;
+  private long startPaperNumber;
 
-  private Timestamp endTime;
+  private long endPaperNumber;
 
-  private String venue;
+  @Column(length = 8000)
+  private String configuration;
 
-  private boolean disableMarksEntry;
-
-  private boolean disableAttendanceEntry;
-
-  @JsonIgnore
   private boolean active = true;
+
 }

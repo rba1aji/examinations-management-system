@@ -33,5 +33,9 @@ public class AddUpdateExamBatchReqDto {
   @NotNull
   private Timestamp endTime;
 
+  private boolean disableMarksEntry;
+
+  private boolean disableAttendanceEntry;
+
   private String venue;
 }

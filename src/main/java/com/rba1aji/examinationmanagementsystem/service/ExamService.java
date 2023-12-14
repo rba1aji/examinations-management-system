@@ -29,14 +29,13 @@ public class ExamService {
 
   public ResponseEntity<?> saveUpdateExam(AddUpdateExamReqDto dto) {
     try {
-      int semester = ValidationUtils.getInt(dto.getSemester());
-      if (semester == 0) {
+      if (dto.getSemester() == 0) {
         return baseResponse.errorResponse(HttpStatus.UNPROCESSABLE_ENTITY, "Invalid semester!");
       }
       Exam exam = Exam.builder()
-          .id(ValidationUtils.getLong(dto.getId()))
+          .id(dto.getId())
           .name(dto.getName())
-          .semester(semester)
+          .semester(dto.getSemester())
           .batch(dto.getBatch())
           .departments(Arrays.stream(dto.getDepartments().split(",")).map(code -> Department.builder().code(code).build()).collect(Collectors.toSet()))
           .active(true)

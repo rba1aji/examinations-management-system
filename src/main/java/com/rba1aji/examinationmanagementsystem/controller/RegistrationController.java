@@ -6,7 +6,7 @@ import com.rba1aji.examinationmanagementsystem.dto.request.DepartmentSaveDto;
 import com.rba1aji.examinationmanagementsystem.dto.request.SaveFacultyReqDto;
 import com.rba1aji.examinationmanagementsystem.dto.request.SaveUpdateCourseDto;
 import com.rba1aji.examinationmanagementsystem.security.AllowedRoles;
-import com.rba1aji.examinationmanagementsystem.security.UserRegistrationService;
+import com.rba1aji.examinationmanagementsystem.service.UserRegistrationService;
 import com.rba1aji.examinationmanagementsystem.service.CourseService;
 import com.rba1aji.examinationmanagementsystem.service.DegreeService;
 import com.rba1aji.examinationmanagementsystem.service.DepartmentService;

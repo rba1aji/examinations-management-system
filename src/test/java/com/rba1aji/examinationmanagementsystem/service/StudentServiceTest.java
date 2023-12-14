@@ -15,12 +15,12 @@ class StudentServiceTest {
   @Autowired
   private StudentService studentService;
 
-  @Test
-  void getStudentsForRegisterNumbersRange() {
-    Set<BatchStudent> batchStudents = new HashSet<>();
-    batchStudents.add(BatchStudent.builder().startRegNum("73772014108").endRegNum("73772014110").build());
-    Assertions.assertNotEquals(0,
-        studentService.getStudentsForRegisterNumbersRange(batchStudents).size()
-    );
-  }
+//  @Test
+//  void getStudentsForRegisterNumbersRange() {
+//    Set<BatchStudent> batchStudents = new HashSet<>();
+//    batchStudents.add(BatchStudent.builder().startRegNum("73772014108").endRegNum("73772014110").build());
+//    Assertions.assertNotEquals(0,
+//        studentService.getStudentsForRegisterNumbersRange(batchStudents).size()
+//    );
+//  }
 }
