@@ -49,4 +49,12 @@ public class ValidationUtils {
   public static boolean isNullOrEmpty(String token) {
     return token == null || token.isEmpty();
   }
+
+  public static boolean isNotNullAndNotEmpty(int[] arr) {
+    return arr != null && arr.length > 0;
+  }
+
+  public static boolean isNotNullAndNotEmpty(Integer[] arr) {
+    return arr != null && arr.length > 0;
+  }
 }

@@ -11,6 +11,7 @@ import com.rba1aji.examinationmanagementsystem.repository.EvaluationBundleReposi
 import com.rba1aji.examinationmanagementsystem.repository.EvaluationRepository;
 import com.rba1aji.examinationmanagementsystem.repository.specification.EvaluationSpecification;
 import com.rba1aji.examinationmanagementsystem.utilities.BaseResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,6 +33,7 @@ public class EvaluationService {
   private final EvaluationBundleRepository evaluationBundleRepository;
   private final BaseResponse baseResponse;
   private final EvaluationSpecification evaluationSpecification;
+  private final HttpServletRequest request;
 
   public ResponseEntity<?> createEvaluationForCourse(CreateEvaluationReqDto reqDto) {
     try {
@@ -78,21 +81,21 @@ public class EvaluationService {
     return baseResponse.successResponse(evaluationBundleList);
   }
 
-  public ResponseEntity<?> getAllEvaluationForExamIdCourseId(long examId, int courseId) {
+  public ResponseEntity<?> getAllEvaluationForExamIdCourseId(List<Integer> examId, List<Integer> courseId, List<Integer> facultyId, boolean sessionFaculty) {
     try {
-      List<Evaluation> evaluationList = evaluationRepository.findAllByExamIdAndCourseIdAndActive(examId, courseId, true);
+      if (sessionFaculty) {
+        Integer sessionUserId = (Integer) request.getAttribute("userId");
+        facultyId = Collections.singletonList(sessionUserId);
+      }
+      List<Evaluation> evaluationList = evaluationRepository.findAll(
+        evaluationSpecification.findAllByExamIdAndCourseIdAndFacultyIdOptional(
+          examId, courseId, facultyId
+        )
+      );
       return baseResponse.successResponse(evaluationList);
     } catch (Exception e) {
       return baseResponse.errorResponse(e);
     }
   }
 
-  public ResponseEntity<?> getAllEvaluationBundleForEvaluationId(int evaluationId) {
-    try {
-      List<EvaluationBundle> evaluationBundleList = evaluationBundleRepository.findAllByEvaluationId(evaluationId);
-      return baseResponse.successResponse(evaluationBundleList);
-    } catch (Exception e) {
-      return baseResponse.errorResponse(e);
-    }
-  }
 }
