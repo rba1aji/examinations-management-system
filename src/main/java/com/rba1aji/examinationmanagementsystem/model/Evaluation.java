@@ -42,7 +42,7 @@ public class Evaluation {
 
   private long endPaperNumber;
 
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne
   private Configuration questionPaperConfig;
 
   private boolean active = true;

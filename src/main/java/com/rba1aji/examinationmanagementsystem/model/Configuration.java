@@ -30,7 +30,7 @@ public class Configuration {
 
   private String type;
 
-  @Column(length = 8000)
+  @Column(length = 8000 , nullable = false)
   private String configJson;
 
   private boolean active;
