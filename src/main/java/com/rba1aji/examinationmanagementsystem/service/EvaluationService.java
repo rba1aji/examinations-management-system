@@ -44,7 +44,7 @@ public class EvaluationService {
         .faculty(Faculty.builder().id(reqDto.getFacultyId()).build())
         .startPaperNumber(reqDto.getStartPaperNumber())
         .endPaperNumber(reqDto.getEndPaperNumber())
-        .questionPaperConfig(Configuration.builder().id(reqDto.getConfigurationId()).build())
+        .questionPaperConfig(Configuration.builder().id(reqDto.getQuestionPaperConfigId()).build())
         .active(true)
         .build();
       evaluationRepository.saveAndFlush(evaluation);

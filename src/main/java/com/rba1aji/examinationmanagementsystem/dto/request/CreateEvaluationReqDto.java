@@ -9,5 +9,5 @@ public class CreateEvaluationReqDto {
   private int facultyId;
   private long startPaperNumber;
   private long endPaperNumber;
-  private int configurationId;
+  private int questionPaperConfigId;
 }
