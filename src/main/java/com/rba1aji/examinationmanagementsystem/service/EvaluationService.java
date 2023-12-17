@@ -56,7 +56,7 @@ public class EvaluationService {
             .number(number)
             .build()
         );
-        if (evaluationPaperList.size() == 25) {
+        if (evaluationPaperList.size() == 25 || number == reqDto.getEndPaperNumber()) {
           evaluationBundleList.add(
             EvaluationBundle.builder()
               .evaluation(evaluation)
