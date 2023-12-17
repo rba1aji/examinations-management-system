@@ -1,6 +1,6 @@
 package com.rba1aji.examinationmanagementsystem.controller;
 
-import com.rba1aji.examinationmanagementsystem.model.EvaluationPaperMarks;
+import com.rba1aji.examinationmanagementsystem.model.SplitUpMarks;
 import com.rba1aji.examinationmanagementsystem.service.EvaluationPaperService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +20,11 @@ public class EvaluationPaperController {
 
   private final EvaluationPaperService evaluationPaperService;
 
-  @PostMapping("/v1/submit-evaluation-paper-marks/{paperId}")
-  public ResponseEntity<?> saveEvaluationPaperMarks(@PathVariable("paperId") int paperId, @RequestBody List<EvaluationPaperMarks> marks) {
-    return evaluationPaperService.submitEvaluationPaperMarks(paperId, marks);
+  @PostMapping("/v1/submit-evaluation-paper-marks/{evaluationId}/{paperId}")
+  public ResponseEntity<?> saveEvaluationPaperMarks(@PathVariable("evaluationId") int evaluationId,
+                                                    @PathVariable("paperId") int paperId,
+                                                    @RequestBody List<SplitUpMarks> marks) {
+    return evaluationPaperService.submitEvaluationPaperMarks(evaluationId, paperId, marks);
   }
 
 }

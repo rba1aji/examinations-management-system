@@ -1,4 +1,4 @@
-package com.rba1aji.examinationmanagementsystem;
+package com.rba1aji.examinationmanagementsystem.enums;
 
 import com.rba1aji.examinationmanagementsystem.model.Marks;
 import com.rba1aji.examinationmanagementsystem.utilities.ConfigurationMaps;

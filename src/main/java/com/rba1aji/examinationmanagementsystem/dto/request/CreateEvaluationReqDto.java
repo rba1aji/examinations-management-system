@@ -1,7 +1,6 @@
 package com.rba1aji.examinationmanagementsystem.dto.request;
 
 import lombok.Data;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 
 @Data
 public class CreateEvaluationReqDto {
@@ -10,5 +9,5 @@ public class CreateEvaluationReqDto {
   private int facultyId;
   private long startPaperNumber;
   private long endPaperNumber;
-  private String configuration;
+  private int configurationId;
 }

@@ -1,6 +1,7 @@
 package com.rba1aji.examinationmanagementsystem.service;
 
 import com.rba1aji.examinationmanagementsystem.dto.request.CreateEvaluationReqDto;
+import com.rba1aji.examinationmanagementsystem.model.Configuration;
 import com.rba1aji.examinationmanagementsystem.model.Course;
 import com.rba1aji.examinationmanagementsystem.model.Evaluation;
 import com.rba1aji.examinationmanagementsystem.model.EvaluationBundle;
@@ -43,7 +44,7 @@ public class EvaluationService {
         .faculty(Faculty.builder().id(reqDto.getFacultyId()).build())
         .startPaperNumber(reqDto.getStartPaperNumber())
         .endPaperNumber(reqDto.getEndPaperNumber())
-        .configuration(reqDto.getConfiguration())
+        .questionPaperConfig(Configuration.builder().id(reqDto.getConfigurationId()).build())
         .active(true)
         .build();
       evaluationRepository.saveAndFlush(evaluation);
