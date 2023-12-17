@@ -1,5 +1,6 @@
 package com.rba1aji.examinationmanagementsystem.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -41,7 +42,7 @@ public class Evaluation {
 
   private long endPaperNumber;
 
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.ALL)
   private Configuration questionPaperConfig;
 
   private boolean active = true;
