@@ -33,6 +33,8 @@ public class EvaluationPaper {
   @ManyToMany(cascade = CascadeType.ALL)
   private List<SplitUpMarks> splitUpMarks;
 
+  private Integer totalMarks;
+
   private Boolean submitted;
 
   private boolean disableEntry;

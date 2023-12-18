@@ -37,6 +37,7 @@ public class EvaluationPaperService {
       evaluationPaper.setDisableEntry(true);
       evaluationPaperRepository.saveAndFlush(evaluationPaper);
       int totalMarks = splitUpMarks.stream().mapToInt(SplitUpMarks::getMarks).sum();
+      evaluationPaper.setTotalMarks(totalMarks);
       Marks marks = Marks.builder().
         evaluationPaper(evaluationPaper)
         .marks(totalMarks)

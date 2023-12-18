@@ -26,4 +26,15 @@ public class EvaluationBundleService {
     }
   }
 
+  public ResponseEntity<?> getEvaluationBundleForId(int evaluationBundleId) {
+    try {
+      return baseResponse.successResponse(
+        evaluationBundleRepository.findById(evaluationBundleId)
+          .orElseThrow(() -> new Exception("Evaluation Bundle not found for id: " + evaluationBundleId))
+      );
+    } catch (Exception e) {
+      return baseResponse.errorResponse(e);
+    }
+  }
+
 }
