@@ -21,4 +21,9 @@ public class EvaluationBundleController {
     return evaluationBundleService.getAllEvaluationBundleForEvaluationId(evaluationId);
   }
 
+  @GetMapping("/v1/get-evaluation-bundle")
+  public ResponseEntity<?> getEvaluationBundle(@RequestParam("evaluationBundleId") int evaluationBundleId) {
+    return evaluationBundleService.getEvaluationBundleForId(evaluationBundleId);
+  }
+
 }

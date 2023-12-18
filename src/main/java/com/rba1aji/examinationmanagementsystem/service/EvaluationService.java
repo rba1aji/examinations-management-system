@@ -1,6 +1,7 @@
 package com.rba1aji.examinationmanagementsystem.service;
 
 import com.rba1aji.examinationmanagementsystem.dto.request.CreateEvaluationReqDto;
+import com.rba1aji.examinationmanagementsystem.model.Configuration;
 import com.rba1aji.examinationmanagementsystem.model.Course;
 import com.rba1aji.examinationmanagementsystem.model.Evaluation;
 import com.rba1aji.examinationmanagementsystem.model.EvaluationBundle;
@@ -43,19 +44,20 @@ public class EvaluationService {
         .faculty(Faculty.builder().id(reqDto.getFacultyId()).build())
         .startPaperNumber(reqDto.getStartPaperNumber())
         .endPaperNumber(reqDto.getEndPaperNumber())
-        .configuration(reqDto.getConfiguration().toString())
+        .questionPaperConfig(Configuration.builder().id(reqDto.getQuestionPaperConfigId()).build())
         .active(true)
         .build();
       evaluationRepository.saveAndFlush(evaluation);
       List<EvaluationPaper> evaluationPaperList = new ArrayList<>();
+      List<EvaluationBundle> evaluationBundleList = new ArrayList<>();
       for (long number = reqDto.getStartPaperNumber(); number <= reqDto.getEndPaperNumber(); number++) {
         evaluationPaperList.add(
           EvaluationPaper.builder()
             .number(number)
             .build()
         );
-        if (evaluationPaperList.size() == 25) {
-          evaluationBundleRepository.saveAndFlush(
+        if (evaluationPaperList.size() == 25 || number == reqDto.getEndPaperNumber()) {
+          evaluationBundleList.add(
             EvaluationBundle.builder()
               .evaluation(evaluation)
               .evaluationPaperList(evaluationPaperList)
@@ -64,6 +66,7 @@ public class EvaluationService {
           evaluationPaperList = new ArrayList<>();
         }
       }
+      evaluationBundleRepository.saveAll(evaluationBundleList);
       return baseResponse.successResponse(evaluation, "Successfully created evaluation!");
     } catch (Exception e) {
       e.printStackTrace();

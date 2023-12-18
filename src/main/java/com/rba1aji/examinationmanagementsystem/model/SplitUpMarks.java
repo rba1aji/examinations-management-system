@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @Entity
-public class EvaluationPaperMarks {
+public class SplitUpMarks {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private int id;

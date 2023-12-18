@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class MarksSpecification {
 
-  public Specification<Marks> getAllByExamBatchIdAndStudentIdAndExamIdAndCourseIdOptional(long examBatchId, long studentId, long examId, int courseId) {
+  public Specification<Marks> getAllByExamBatchIdAndStudentIdAndExamIdAndCourseIdOptional(long examBatchId, long studentId, long examId, int courseId,
+                                                                                          long startEvaluationPaperNumber, long endEvaluationPaperNumber) {
     return ((root, query, cb) -> {
       Predicate predicate = cb.and();
       if (examBatchId > 0) {
@@ -25,7 +26,10 @@ public class MarksSpecification {
       if (courseId > 0) {
         predicate = cb.and(predicate, cb.equal(root.get("course").get("id"), courseId));
       }
-      query.orderBy(cb.asc(root.get("student").get("registerNumber")));
+      if (startEvaluationPaperNumber > 0 && endEvaluationPaperNumber > 0) {
+        predicate = cb.and(predicate, cb.between(root.get("evaluationPaper").get("number"), startEvaluationPaperNumber, endEvaluationPaperNumber));
+      }
+//      query.orderBy(cb.asc(root.get("student").get("registerNumber")));
       return predicate;
     });
   }

@@ -11,4 +11,5 @@ public class ExamMarksReportReqDto {
   private List<String> departmentCodeList;
   private List<Integer> courseIdList;
   private List<Integer> facultyIdList;
+  private List<Integer> evaluationBundleIdList;
 }

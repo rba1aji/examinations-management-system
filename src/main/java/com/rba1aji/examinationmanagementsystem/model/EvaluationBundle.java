@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,6 +27,7 @@ public class EvaluationBundle {
   private int id;
 
   @OneToMany(cascade = CascadeType.ALL)
+  @OrderBy("number")
   private List<EvaluationPaper> evaluationPaperList;
 
   @ManyToOne

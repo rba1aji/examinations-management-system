@@ -85,7 +85,7 @@ public class UserRegistrationService {
           errorList.add(error);
         }
       });
-      studentRepository.saveAllAndFlush(studentList);
+      studentRepository.saveAll(studentList);
       return baseResponse.successResponse(
           errorList,
           "Successfully registered students with " + errorList.size() + " failure!");
@@ -119,7 +119,7 @@ public class UserRegistrationService {
           errorList.add(error);
         }
       });
-      facultyRepository.saveAllAndFlush(facultyList);
+      facultyRepository.saveAll(facultyList);
       return baseResponse.successResponse(errorList,
           "Successfully registered faculties with " + errorList.size() + " failure!"
       );

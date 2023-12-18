@@ -1,6 +1,6 @@
 package com.rba1aji.examinationmanagementsystem.service;
 
-import com.rba1aji.examinationmanagementsystem.ExamMarksReportEnum;
+import com.rba1aji.examinationmanagementsystem.enums.ExamMarksReportEnum;
 import com.rba1aji.examinationmanagementsystem.dto.ExamMarksReportReqDto;
 import com.rba1aji.examinationmanagementsystem.model.Marks;
 import com.rba1aji.examinationmanagementsystem.repository.ExamRepository;

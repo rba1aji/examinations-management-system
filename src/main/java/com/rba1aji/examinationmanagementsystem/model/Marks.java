@@ -5,12 +5,18 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import java.sql.Timestamp;
+import java.time.Instant;
 
 @Entity
 @Data
@@ -18,9 +24,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"student_id", "exam_id", "course_id"})
-    }
+  uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"student_id", "exam_id", "course_id"})
+  }
 )
 public class Marks {
 
@@ -43,5 +49,16 @@ public class Marks {
 
   @ManyToOne
   private ExamBatch examBatch;
+
+  @OneToOne
+  private EvaluationPaper evaluationPaper;
+
+  @LastModifiedDate
+  private Timestamp lastModifiedDate;
+
+  @PrePersist
+  void prePersist() {
+    this.lastModifiedDate = Timestamp.from(Instant.now());
+  }
 
 }

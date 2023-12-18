@@ -29,8 +29,10 @@ public class MarksController {
   public ResponseEntity<?> getAllMarks(@RequestParam(name = "examBatch", required = false) String examBatchId,
                                        @RequestParam(name = "student", required = false) String studentId,
                                        @RequestParam(name = "exam", required = false) String examId,
-                                       @RequestParam(name = "course", required = false) String courseId) {
-    return marksService.getAllMarksByOptionalParams(examBatchId, studentId, examId, courseId);
+                                       @RequestParam(name = "course", required = false) String courseId,
+                                       @RequestParam(name = "evaluationId", required = false, defaultValue = "0") int evaluationId,
+                                       @RequestParam(name = "evaluationBundleId", required = false, defaultValue = "0") int evaluationBundleId) {
+    return marksService.getAllMarksByOptionalParams(examBatchId, studentId, examId, courseId, evaluationId, evaluationBundleId);
   }
 
   @Deprecated

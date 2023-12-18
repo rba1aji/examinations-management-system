@@ -63,7 +63,7 @@ public class CourseService {
               .batch(ExcelCellUtils.getString(row.getCell(6)))
               .active(true)
               .build();
-          course = this.saveCourse(course);
+          course = saveCourse(course);
           response.setStatus(true);
           response.setId(course.getCode());
           response.setMessage("Success");
@@ -80,7 +80,6 @@ public class CourseService {
     }
   }
 
-  @Transactional
   public Course saveCourse(Course course) {
     return courseRepository.saveAndFlush(course);
   }

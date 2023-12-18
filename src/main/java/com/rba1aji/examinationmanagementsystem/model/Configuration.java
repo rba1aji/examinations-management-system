@@ -1,11 +1,10 @@
 package com.rba1aji.examinationmanagementsystem.model;
 
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PrePersist;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,29 +14,26 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.List;
 
 @Entity
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class EvaluationPaper {
+@Builder
+public class Configuration {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private int id;
 
-  private long number;
+  private String name;
 
-  @ManyToMany(cascade = CascadeType.ALL)
-  private List<SplitUpMarks> splitUpMarks;
+  private String type;
 
-  private Integer totalMarks;
+  @Column(length = 8000 , nullable = false)
+  private String configJson;
 
-  private Boolean submitted;
-
-  private boolean disableEntry;
+  private boolean active;
 
   @LastModifiedDate
   private Timestamp lastModifiedDate;
@@ -48,3 +44,15 @@ public class EvaluationPaper {
   }
 
 }
+
+////sectionsCount
+//sections:
+//[
+//{
+//  //questionsCount
+//  answerableQuestionsCount:
+//  questions:[
+//    { question: maxMark: co: }
+//  ]
+//}
+//]

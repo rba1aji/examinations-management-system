@@ -1,8 +1,12 @@
 package com.rba1aji.examinationmanagementsystem.service;
 
 import com.rba1aji.examinationmanagementsystem.dto.ExamMarksReportReqDto;
+import com.rba1aji.examinationmanagementsystem.model.Evaluation;
+import com.rba1aji.examinationmanagementsystem.model.EvaluationBundle;
 import com.rba1aji.examinationmanagementsystem.model.ExamBatch;
 import com.rba1aji.examinationmanagementsystem.model.Marks;
+import com.rba1aji.examinationmanagementsystem.repository.EvaluationBundleRepository;
+import com.rba1aji.examinationmanagementsystem.repository.EvaluationRepository;
 import com.rba1aji.examinationmanagementsystem.repository.ExamBatchRepository;
 import com.rba1aji.examinationmanagementsystem.repository.MarksRepository;
 import com.rba1aji.examinationmanagementsystem.repository.specification.MarksSpecification;
@@ -27,21 +31,31 @@ public class MarksService {
   private final BaseResponse baseResponse;
   private final MarksSpecification marksSpecification;
   private final ExamBatchRepository examBatchRepository;
+  private final EvaluationRepository evaluationRepository;
+  private final EvaluationBundleRepository evaluationBundleRepository;
 
-  public ResponseEntity<?> getAllMarksByOptionalParams(String examBatchId, String studentId, String examId, String courseId) {
+  public ResponseEntity<?> getAllMarksByOptionalParams(String examBatchId, String studentId, String examId, String courseId, int evaluationId, int evaluationBundleId) {
     try {
-      Specification<Marks> marksSpec = marksSpecification.getAllByExamBatchIdAndStudentIdAndExamIdAndCourseIdOptional(
-          ValidationUtils.getLong(examBatchId),
-          ValidationUtils.getLong(studentId),
-          ValidationUtils.getLong(examId),
-          ValidationUtils.getInt(courseId)
-      );
-      List<Marks> marks;
-      if (marksSpec != null) {
-        marks = marksRepository.findAll(marksSpec);
-      } else {
-        marks = marksRepository.findAll();
+      Evaluation evaluation = evaluationId == 0 ? null : evaluationRepository.findById(evaluationId).orElseThrow();
+      EvaluationBundle evaluationBundle = evaluationBundleId == 0 ? null : evaluationBundleRepository.findById(evaluationBundleId).orElseThrow();
+      long startPaperNumber = 0;
+      long endPaperNumber = 0;
+      if (evaluation != null) {
+        startPaperNumber = evaluation.getStartPaperNumber();
+        endPaperNumber = evaluation.getEndPaperNumber();
+      } else if (evaluationBundle != null) {
+        startPaperNumber = evaluationBundle.getEvaluationPaperList().get(0).getNumber();
+        endPaperNumber = evaluationBundle.getEvaluationPaperList().get(evaluationBundle.getEvaluationPaperList().size() - 1).getNumber();
       }
+
+      Specification<Marks> marksSpec = marksSpecification.getAllByExamBatchIdAndStudentIdAndExamIdAndCourseIdOptional(
+        ValidationUtils.getLong(examBatchId),
+        ValidationUtils.getLong(studentId),
+        ValidationUtils.getLong(examId),
+        ValidationUtils.getInt(courseId),
+        startPaperNumber, endPaperNumber
+      );
+      List<Marks> marks = marksRepository.findAll(marksSpec);
       return baseResponse.successResponse(marks);
     } catch (Exception e) {
       e.printStackTrace();
