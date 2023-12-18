@@ -13,21 +13,51 @@ public enum ExamMarksReportEnum {
   STUDENT_REGISTER_NUMBER(1, "Student Register Number") {
     @Override
     public String getValue(Marks marks) {
-      return marks.getStudent().getRegisterNumber();
+      if (marks.getStudent() != null) {
+        return marks.getStudent().getRegisterNumber();
+      }
+      return "";
     }
   },
 
   STUDENT_NAME(2, "Student Name") {
     @Override
     public String getValue(Marks marks) {
-      return marks.getStudent().getFullName();
+      if (marks.getStudent() != null) {
+        return marks.getStudent().getFullName();
+      }
+      return "";
     }
   },
 
   ATTENDANCE(3, "Attendance") {
     @Override
     public String getValue(Marks marks) {
-      return ConfigurationMaps.attendanceCharToString.get(marks.getAttendance());
+      if (marks.getAttendance() != null) {
+        return ConfigurationMaps.attendanceCharToString.get(marks.getAttendance());
+      }
+      return "";
+    }
+  },
+
+  EVALUATION_PAPER_NUMBER(10, "Evaluation Paper Number") {
+    @Override
+    public String getValue(Marks marks) {
+      if (marks.getEvaluationPaper() != null) {
+        return "" + marks.getEvaluationPaper().getNumber();
+      }
+      return "";
+    }
+  },
+
+  EVALUATION_PAPER_SPLIT_UP_MARKS(11, "SplitUp Marks") {
+    @Override
+    public String getValue(Marks marks) {
+      if (marks.getEvaluationPaper() != null) {
+        return marks.getEvaluationPaper().getSplitUpMarks().stream()
+          .map(splitUpMarks -> splitUpMarks.getQuestion() + " = " + splitUpMarks.getMarks()).toList().toString();
+      }
+      return "";
     }
   },
 
@@ -38,37 +68,43 @@ public enum ExamMarksReportEnum {
     }
   },
 
-  EXAM_NAME(5, "Exam Name") {
-    @Override
-    public String getValue(Marks marks) {
-      return marks.getExam().getName();
-    }
-  },
-
-  COURSE_CODE(6, "Course code") {
+  COURSE_CODE(5, "Course code") {
     @Override
     public String getValue(Marks marks) {
       return marks.getCourse().getCode();
     }
   },
 
-  COURSE_NAME(7, "Course name") {
+  COURSE_NAME(6, "Course name") {
     @Override
     public String getValue(Marks marks) {
       return marks.getCourse().getName();
     }
   },
 
+  EXAM_NAME(7, "Exam Name") {
+    @Override
+    public String getValue(Marks marks) {
+      return marks.getExam().getName();
+    }
+  },
+
   FACULTY_IN_CHARGE(8, "Faculty InCharge") {
     @Override
     public String getValue(Marks marks) {
-      return marks.getExamBatch().getFaculty().getFullName();
+      if (marks.getExamBatch() != null) {
+        return marks.getExamBatch().getFaculty().getFullName();
+      }
+      return "";
     }
   },
   EXAM_DATE(9, "Exam Date") {
     @Override
     public String getValue(Marks marks) {
-      return marks.getExamBatch().getStartTime().toLocalDateTime().toLocalDate().toString();
+      if (marks.getExamBatch() != null) {
+        return marks.getExamBatch().getStartTime().toLocalDateTime().toLocalDate().toString();
+      }
+      return "";
     }
   };
 
