@@ -9,6 +9,7 @@ import com.rba1aji.examinationmanagementsystem.repository.EvaluationRepository;
 import com.rba1aji.examinationmanagementsystem.repository.MarksRepository;
 import com.rba1aji.examinationmanagementsystem.utilities.BaseResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Slf4j
 public class EvaluationPaperService {
 
   private final EvaluationPaperRepository evaluationPaperRepository;
@@ -50,4 +52,16 @@ public class EvaluationPaperService {
       return baseResponse.errorResponse(e);
     }
   }
+
+  public ResponseEntity<?> enableEntryForEvaluationPapers(List<Integer> paperIds) {
+    try {
+      List<EvaluationPaper> evaluationPapers = evaluationPaperRepository.findAllById(paperIds);
+      evaluationPapers.forEach(paper -> paper.setDisableEntry(false));
+      evaluationPaperRepository.saveAllAndFlush(evaluationPapers);
+      return baseResponse.successResponse(null, "Successfully enabled evaluation papers entry!");
+    } catch (Exception e) {
+      return baseResponse.errorResponse(e);
+    }
+  }
+
 }
