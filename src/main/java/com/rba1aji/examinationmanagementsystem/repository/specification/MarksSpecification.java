@@ -16,6 +16,7 @@ public class MarksSpecification {
       Predicate predicate = cb.and();
       if (examBatchId > 0) {
         predicate = cb.and(predicate, cb.equal(root.get("examBatch").get("id"), examBatchId));
+        query.orderBy(cb.asc(root.get("student").get("registerNumber")));
       }
       if (studentId > 0) {
         predicate = cb.and(predicate, cb.equal(root.get("student").get("id"), studentId));
@@ -28,8 +29,8 @@ public class MarksSpecification {
       }
       if (startEvaluationPaperNumber > 0 && endEvaluationPaperNumber > 0) {
         predicate = cb.and(predicate, cb.between(root.get("evaluationPaper").get("number"), startEvaluationPaperNumber, endEvaluationPaperNumber));
+        query.orderBy(cb.asc(root.get("evaluationPaper").get("number")));
       }
-//      query.orderBy(cb.asc(root.get("student").get("registerNumber")));
       return predicate;
     });
   }
