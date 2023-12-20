@@ -1,5 +1,6 @@
 package com.rba1aji.examinationmanagementsystem.service;
 
+import com.rba1aji.examinationmanagementsystem.dto.EnableDisableEvaluationBundlePrintoutReqDto;
 import com.rba1aji.examinationmanagementsystem.model.EvaluationBundle;
 import com.rba1aji.examinationmanagementsystem.repository.EvaluationBundleRepository;
 import com.rba1aji.examinationmanagementsystem.utilities.BaseResponse;
@@ -32,6 +33,17 @@ public class EvaluationBundleService {
         evaluationBundleRepository.findById(evaluationBundleId)
           .orElseThrow(() -> new Exception("Evaluation Bundle not found for id: " + evaluationBundleId))
       );
+    } catch (Exception e) {
+      return baseResponse.errorResponse(e);
+    }
+  }
+
+  public ResponseEntity<?> disablePrintoutForEvaluationBundle(EnableDisableEvaluationBundlePrintoutReqDto reqDto) {
+    try {
+      List<EvaluationBundle> evaluationBundleList = evaluationBundleRepository.findAllById(reqDto.getEvaluationBundleId());
+      evaluationBundleList.forEach(bundle -> bundle.setDisablePrintout(reqDto.isDisablePrintout()));
+      evaluationBundleRepository.saveAll(evaluationBundleList);
+      return baseResponse.successResponse(null, "Printout " + (reqDto.isDisablePrintout() ? "disabled" : "enabled") + " for evaluation bundles successfully!");
     } catch (Exception e) {
       return baseResponse.errorResponse(e);
     }
