@@ -34,4 +34,6 @@ public class EvaluationBundle {
   private Evaluation evaluation;
 
   private boolean disableEntry;
+
+  private Boolean disablePrintout;
 }

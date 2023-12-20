@@ -40,12 +40,13 @@ public class EvaluationPaperService {
       evaluationPaperRepository.saveAndFlush(evaluationPaper);
       int totalMarks = splitUpMarks.stream().mapToInt(SplitUpMarks::getMarks).sum();
       evaluationPaper.setTotalMarks(totalMarks);
-      Marks marks = Marks.builder().
-        evaluationPaper(evaluationPaper)
-        .marks(totalMarks)
-        .exam(evaluation.getExam())
-        .course(evaluation.getCourse())
-        .build();
+      Marks marks = marksRepository.findByEvaluationPaperId(evaluationPaper.getId())
+        .orElse(Marks.builder().
+          evaluationPaper(evaluationPaper)
+          .exam(evaluation.getExam())
+          .course(evaluation.getCourse())
+          .build());
+      marks.setMarks(totalMarks);
       marksRepository.saveAndFlush(marks);
       return baseResponse.successResponse(marks, "Evaluation marks submitted successfully for paper: " + evaluationPaper.getNumber());
     } catch (Exception e) {
