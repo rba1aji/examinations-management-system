@@ -33,4 +33,15 @@ public class ConfigurationService {
     }
   }
 
+  public ResponseEntity<?> deleteConfiguration(int configurationId) {
+    try {
+      Configuration configuration = configurationRepository.findById(configurationId).orElseThrow();
+      configuration.setActive(false);
+      configurationRepository.saveAndFlush(configuration);
+      return baseResponse.successResponse(null, "Configuration deleted successfully!");
+    } catch (Exception e) {
+      return baseResponse.errorResponse(e);
+    }
+  }
+
 }
