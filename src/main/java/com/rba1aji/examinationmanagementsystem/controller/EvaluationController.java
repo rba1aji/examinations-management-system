@@ -7,6 +7,7 @@ import com.rba1aji.examinationmanagementsystem.service.EvaluationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,6 +44,12 @@ public class EvaluationController {
                                             @RequestParam(value = "facultyId", required = false) List<Integer> facultyId,
                                             @RequestParam(value = "sessionFaculty", required = false) boolean sessionFaculty) {
     return evaluationService.getAllEvaluationForExamIdCourseId(examId, courseId, facultyId, sessionFaculty);
+  }
+
+  @DeleteMapping("/v1/delete-evaluation")
+  @AllowedRoles(UserRole.ADMIN)
+  public ResponseEntity<?> deleteEvaluation(@RequestParam("evaluationId") int evaluationId) {
+    return evaluationService.deleteEvaluation(evaluationId);
   }
 
 
