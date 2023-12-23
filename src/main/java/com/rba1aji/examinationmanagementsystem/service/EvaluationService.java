@@ -101,4 +101,15 @@ public class EvaluationService {
     }
   }
 
+  public ResponseEntity<?> deleteEvaluation(int evaluationId) {
+    try {
+      Evaluation evaluation = evaluationRepository.findById(evaluationId).orElseThrow();
+      evaluation.setActive(false);
+      evaluationRepository.save(evaluation);
+      return baseResponse.successResponse(null, "Successfully deleted evaluation!");
+    } catch (Exception e) {
+      return baseResponse.errorResponse(e);
+    }
+  }
+
 }

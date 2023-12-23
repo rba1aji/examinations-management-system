@@ -7,10 +7,12 @@ import com.rba1aji.examinationmanagementsystem.service.ConfigurationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,6 +32,12 @@ public class ConfigurationController {
   @AllowedRoles(UserRole.ADMIN)
   public ResponseEntity<?> getAllConfiguration() {
     return configurationService.getAllConfiguration();
+  }
+
+  @DeleteMapping("/v1/delete-configuration")
+  @AllowedRoles(UserRole.ADMIN)
+  public ResponseEntity<?> deleteConfiguration(@RequestParam("configurationId") int configurationId) {
+    return configurationService.deleteConfiguration(configurationId);
   }
 
 }
