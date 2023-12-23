@@ -1,6 +1,8 @@
 package com.rba1aji.examinationmanagementsystem.controller;
 
+import com.rba1aji.examinationmanagementsystem.constant.UserRole;
 import com.rba1aji.examinationmanagementsystem.dto.request.CreateEvaluationReqDto;
+import com.rba1aji.examinationmanagementsystem.security.AllowedRoles;
 import com.rba1aji.examinationmanagementsystem.service.EvaluationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ public class EvaluationController {
   private final EvaluationService evaluationService;
 
   @PostMapping("/v1/create-evaluation-for-course")
+  @AllowedRoles(UserRole.ADMIN)
   public ResponseEntity<?> createEvaluationForCourse(@RequestBody CreateEvaluationReqDto reqDto) {
     return evaluationService.createEvaluationForCourse(reqDto);
   }
@@ -34,6 +37,7 @@ public class EvaluationController {
 //  }
 
   @GetMapping("/v1/get-all-evaluation")
+  @AllowedRoles({UserRole.ADMIN, UserRole.FACULTY})
   public ResponseEntity<?> getAllEvaluation(@RequestParam(value = "examId", required = false) List<Integer> examId,
                                             @RequestParam(value = "courseId", required = false) List<Integer> courseId,
                                             @RequestParam(value = "facultyId", required = false) List<Integer> facultyId,

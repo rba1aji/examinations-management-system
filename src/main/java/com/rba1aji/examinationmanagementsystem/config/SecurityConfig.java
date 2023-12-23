@@ -29,24 +29,27 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable)
-        .cors(AbstractHttpConfigurer::disable)
-        .authorizeHttpRequests(authorize -> {
-          authorize
-              .requestMatchers("/auth/**").permitAll()
-              .requestMatchers("/registration/**").authenticated()
-              .requestMatchers("/faculty/**").authenticated()
-              .requestMatchers("/student/**").authenticated()
-              .requestMatchers("/department/**").authenticated()
-              .requestMatchers("/course/**").authenticated()
-              .requestMatchers("/exam-batch/**").authenticated()
-              .requestMatchers("/exam/**").authenticated()
-              .requestMatchers("/marks/**").authenticated()
-              .requestMatchers("/report/**").authenticated()
-              .anyRequest().permitAll();
-        }).exceptionHandling(ex -> ex
-            .accessDeniedHandler(accessDeniedEntryPoint)
-            .authenticationEntryPoint(authenticationEntryPoint)
-        );
+      .cors(AbstractHttpConfigurer::disable)
+      .authorizeHttpRequests(authorize -> {
+        authorize
+          .requestMatchers("/auth/**").permitAll()
+          .requestMatchers("/registration/**").authenticated()
+          .requestMatchers("/faculty/**").authenticated()
+          .requestMatchers("/student/**").authenticated()
+          .requestMatchers("/department/**").authenticated()
+          .requestMatchers("/course/**").authenticated()
+          .requestMatchers("/exam-batch/**").authenticated()
+          .requestMatchers("/exam/**").authenticated()
+          .requestMatchers("/marks/**").authenticated()
+          .requestMatchers("/report/**").authenticated()
+          .requestMatchers("/evaluation/**").authenticated()
+          .requestMatchers("/evaluation-bundle/**").authenticated()
+          .requestMatchers("/evaluation-paper/**").authenticated()
+          .anyRequest().permitAll();
+      }).exceptionHandling(ex -> ex
+        .accessDeniedHandler(accessDeniedEntryPoint)
+        .authenticationEntryPoint(authenticationEntryPoint)
+      );
     http.addFilterBefore(crossOriginFilter, UsernamePasswordAuthenticationFilter.class);
     http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

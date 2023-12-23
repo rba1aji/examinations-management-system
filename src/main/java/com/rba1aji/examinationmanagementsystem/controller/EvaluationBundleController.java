@@ -1,6 +1,8 @@
 package com.rba1aji.examinationmanagementsystem.controller;
 
+import com.rba1aji.examinationmanagementsystem.constant.UserRole;
 import com.rba1aji.examinationmanagementsystem.dto.EnableDisableEvaluationBundlePrintoutReqDto;
+import com.rba1aji.examinationmanagementsystem.security.AllowedRoles;
 import com.rba1aji.examinationmanagementsystem.service.EvaluationBundleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +22,19 @@ public class EvaluationBundleController {
   private final EvaluationBundleService evaluationBundleService;
 
   @GetMapping("/v1/get-all-evaluation-bundle-for-evaluation")
+  @AllowedRoles({UserRole.ADMIN, UserRole.FACULTY})
   public ResponseEntity<?> getAllEvaluationBundles(@RequestParam("evaluationId") int evaluationId) {
     return evaluationBundleService.getAllEvaluationBundleForEvaluationId(evaluationId);
   }
 
   @GetMapping("/v1/get-evaluation-bundle")
+  @AllowedRoles({UserRole.ADMIN, UserRole.FACULTY})
   public ResponseEntity<?> getEvaluationBundle(@RequestParam("evaluationBundleId") int evaluationBundleId) {
     return evaluationBundleService.getEvaluationBundleForId(evaluationBundleId);
   }
 
   @PutMapping("/v1/enable-disable-printout-for-evaluation-bundles")
+  @AllowedRoles({UserRole.ADMIN, UserRole.FACULTY})
   public ResponseEntity<?> disablePrintoutForEvaluationBundle(@RequestBody EnableDisableEvaluationBundlePrintoutReqDto reqDto) {
     return evaluationBundleService.disablePrintoutForEvaluationBundle(reqDto);
   }
