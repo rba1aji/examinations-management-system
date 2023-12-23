@@ -1,6 +1,8 @@
 package com.rba1aji.examinationmanagementsystem.controller;
 
+import com.rba1aji.examinationmanagementsystem.constant.UserRole;
 import com.rba1aji.examinationmanagementsystem.model.SplitUpMarks;
+import com.rba1aji.examinationmanagementsystem.security.AllowedRoles;
 import com.rba1aji.examinationmanagementsystem.service.EvaluationPaperService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ public class EvaluationPaperController {
   private final EvaluationPaperService evaluationPaperService;
 
   @PostMapping("/v1/submit-evaluation-paper-marks/{evaluationId}/{paperId}")
+  @AllowedRoles({UserRole.ADMIN, UserRole.FACULTY})
   public ResponseEntity<?> saveEvaluationPaperMarks(@PathVariable("evaluationId") int evaluationId,
                                                     @PathVariable("paperId") int paperId,
                                                     @RequestBody List<SplitUpMarks> marks) {
@@ -29,6 +32,7 @@ public class EvaluationPaperController {
   }
 
   @PutMapping("/v1/enable-entry-for-evaluation-papers")
+  @AllowedRoles(UserRole.ADMIN)
   public ResponseEntity<?> enableEntryForEvaluationPapers(@RequestBody List<Integer> paperIds) {
     return evaluationPaperService.enableEntryForEvaluationPapers(paperIds);
   }
