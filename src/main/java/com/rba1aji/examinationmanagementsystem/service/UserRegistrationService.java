@@ -61,6 +61,7 @@ public class UserRegistrationService {
   }
 
   public ResponseEntity<?> excelRegisterStudents(MultipartFile file) {
+    long startTime = System.currentTimeMillis();
     List<RepoSaveResponseDto> errorList = new ArrayList<>();
     List<Student> studentList = new ArrayList<>();
     try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
@@ -85,7 +86,9 @@ public class UserRegistrationService {
           errorList.add(error);
         }
       });
+      log.info("studentExcelProcess -- size:" + sheet.getPhysicalNumberOfRows() + " -- time:" + (System.currentTimeMillis() - startTime) + "ms");
       studentRepository.saveAll(studentList);
+      log.info("studentRegistration -- size:" + studentList.size() + " -- time:" + (System.currentTimeMillis() - startTime) + "ms");
       return baseResponse.successResponse(
           errorList,
           "Successfully registered students with " + errorList.size() + " failure!");
@@ -96,6 +99,7 @@ public class UserRegistrationService {
   }
 
   public ResponseEntity<?> excelRegisterFaculties(MultipartFile file) {
+    long startTime = System.currentTimeMillis();
     List<Object> errorList = new ArrayList<>();
     List<Faculty> facultyList = new ArrayList<>();
     try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
@@ -119,7 +123,9 @@ public class UserRegistrationService {
           errorList.add(error);
         }
       });
+      log.info("facultyExcelProcess -- size:" + sheet.getPhysicalNumberOfRows() + " -- time:" + (System.currentTimeMillis() - startTime) + "ms");
       facultyRepository.saveAll(facultyList);
+      log.info("facultyRegistration -- size:" + facultyList.size() + " -- time:" + (System.currentTimeMillis() - startTime) + "ms");
       return baseResponse.successResponse(errorList,
           "Successfully registered faculties with " + errorList.size() + " failure!"
       );
