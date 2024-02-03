@@ -7,6 +7,7 @@ import com.rba1aji.examinationmanagementsystem.repository.ExamRepository;
 import com.rba1aji.examinationmanagementsystem.utilities.BaseResponse;
 import com.rba1aji.examinationmanagementsystem.utilities.ExcelFileGenerator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Slf4j
 public class ReportService {
 
   private final MarksService marksService;
@@ -26,6 +28,7 @@ public class ReportService {
   private final BaseResponse baseResponse;
 
   public ResponseEntity<?> generateExamMarksReport(ExamMarksReportReqDto reqDto) {
+    long startTime = System.currentTimeMillis();
     try {
       if (reqDto.getExamId() == 0 || !examRepository.existsById(reqDto.getExamId())) {
         return baseResponse.errorResponse(HttpStatus.UNPROCESSABLE_ENTITY, "Invalid exam id!");
@@ -53,7 +56,7 @@ public class ReportService {
       HttpHeaders headers = new HttpHeaders();
       headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
       headers.setContentDispositionFormData("attachment", "exam_marks_report_" + new Date().getTime() + ".xlsx");
-
+      log.info("marksReport -- size:" + marksList.size() + " -- time:" + (System.currentTimeMillis() - startTime) + "ms");
       return ResponseEntity.ok()
           .headers(headers)
           .body(fileBytes);
