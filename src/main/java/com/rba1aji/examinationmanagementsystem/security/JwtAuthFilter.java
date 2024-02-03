@@ -16,6 +16,7 @@ import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,12 +27,18 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Slf4j
 public class JwtAuthFilter extends OncePerRequestFilter {
 
   private final JwtAuthUtils jwtAuthUtils;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    try {
+      log.info("Available Threads: {}, Active Threads: {}, Free Memory: {}", Runtime.getRuntime().availableProcessors(), Thread.activeCount(), Runtime.getRuntime().freeMemory());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
     try {
 //      String token = AuthService.getAuthTokenFromCookies(request)
       String token = "";
