@@ -6,6 +6,7 @@ import com.rba1aji.examinationmanagementsystem.dto.request.DepartmentSaveDto;
 import com.rba1aji.examinationmanagementsystem.dto.request.SaveFacultyReqDto;
 import com.rba1aji.examinationmanagementsystem.dto.request.SaveUpdateCourseDto;
 import com.rba1aji.examinationmanagementsystem.security.AllowedRoles;
+import com.rba1aji.examinationmanagementsystem.service.DefaultsRegistrationService;
 import com.rba1aji.examinationmanagementsystem.service.UserRegistrationService;
 import com.rba1aji.examinationmanagementsystem.service.CourseService;
 import com.rba1aji.examinationmanagementsystem.service.DegreeService;
@@ -14,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +35,7 @@ public class RegistrationController {
   private final DepartmentService departmentService;
   private final DegreeService degreeService;
   private final CourseService courseService;
+  private final DefaultsRegistrationService defaultsRegistrationService;
 
   @PostMapping("/register-faculty")
   @AllowedRoles(UserRole.ADMIN)
@@ -74,6 +77,12 @@ public class RegistrationController {
   @AllowedRoles(UserRole.ADMIN)
   public ResponseEntity<?> excelRegisterCourses(@RequestPart("file") MultipartFile file) {
     return courseService.excelRegisterCourses(file);
+  }
+
+  @GetMapping("/register-defaults")
+  @AllowedRoles(UserRole.ADMIN)
+  private ResponseEntity<?> registerDefaults(){
+    return defaultsRegistrationService.saveDefaults();
   }
 
 }
